@@ -1,23 +1,7 @@
 import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
 import { type TaskType, data } from "~/lib/task-types";
+import {TaskTypeSummaryCard} from "~/components/ui/tasktype-card";
 
 export default ()=>  {
-  const createTaskTypeCard = (taskType: TaskType) => {
-    return (
-      <Card key={taskType.id}>
-        <CardHeader>
-          <CardTitle>{taskType.id} - {taskType.name}</CardTitle>
-          <CardDescription>TaskType</CardDescription>
-          {/*<CardAction>Card Action</CardAction>*/}
-        </CardHeader>
-        {/*<CardContent>*/}
-        {/*  <p>Size: {taskType.name} ({taskType.value})</p>*/}
-        {/*</CardContent>*/}
-        {/*<CardFooter>*/}
-        {/*  <p>Card Footer</p>*/}
-        {/*</CardFooter>*/}
-      </Card>
-    )
-  }
-  return data.map(createTaskTypeCard)
+  return data.map((taskType) => <TaskTypeSummaryCard taskType={taskType}></TaskTypeSummaryCard>)
 }

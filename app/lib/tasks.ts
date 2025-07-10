@@ -1,8 +1,16 @@
-import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
 import { type TaskType } from "~/lib/task-types";
-// TODO: Convert to camel case from snake case
+import {
+  type AdultingData,
+  type ReturnedChore,
+  type ReturnedData,
+  type ReturnedTask,
+  supabase, taskSelect
+} from "~/lib/client";
+import type { QueryData, QueryResult} from "@supabase/supabase-js";
+import type {Tag} from "~/lib/tags";
+import { DateTime } from "luxon"
 
-export type Task = {
+type Task = {
   id: number;
   tags: null,
   choreId: number;
@@ -10,126 +18,107 @@ export type Task = {
   startDate: string;
   // Note: the singular "type" not "Types"
   taskType: TaskType;
+  // Note: Not including task_type_id because we include the taskType directly
+  completedBy: string | null;
+  dateCompleted: string | null;
 }
-export const data: Task[] = [
-  {
-    "id": 1,
-    "tags": null,
-    "choreId": 1,
-    "dueDate": "2025-06-10",
-    "startDate": "2025-06-03",
-    "taskType": {
-      "id": 1,
-      "name": "Water Plants",
-      "boopSize": {
-        "id": 1,
-        "name": "small",
-        "value": 3
-      },
-      "boopSizeId": 1
-    },
-    "completedBy": null,
-    "taskTypeId": 1,
-    "date_completed": "2025-06-10"
-  },
-  {
-    "id": 2,
-    "tags": null,
-    "choreId": 1,
-    "dueDate": "2025-06-17",
-    "startDate": "2025-06-10",
-    "taskType": {
-      "id": 1,
-      "name": "Water Plants",
-      "boopSize": {
-        "id": 1,
-        "name": "small",
-        "value": 3
-      },
-      "boopSizeId": 1
-    },
-    "completedBy": null,
-    "taskTypeId": 1,
-    "date_completed": "2025-06-17"
-  },
-  {
-    "id": 3,
-    "tags": null,
-    "choreId": 1,
-    "dueDate": "2025-05-23",
-    "startDate": "2025-05-12",
-    "taskType": {
-      "id": 2,
-      "name": "Fertilise Plants",
-      "boopSize": {
-        "id": 2,
-        "name": "medium",
-        "value": 5
-      },
-      "boopSizeId": 2
-    },
-    "completedBy": null,
-    "taskTypeId": 2,
-    "date_completed": "2025-05-23"
-  },
-  {
-    "id": 4,
-    "tags": null,
-    "choreId": 1,
-    "dueDate": "2025-06-20",
-    "startDate": "2025-06-09",
-    "taskType": {
-      "id": 2,
-      "name": "Fertilise Plants",
-      "boopSize": {
-        "id": 2,
-        "name": "medium",
-        "value": 5
-      },
-      "boopSizeId": 2
-    },
-    "completedBy": null,
-    "taskTypeId": 2,
-    "date_completed": "2025-06-20"
-  },
-  {
-    "id": 5,
-    "tags": null,
-    "choreId": 1,
-    "dueDate": "2025-06-24",
-    "startDate": "2025-06-17",
-    "taskType": {
-      "id": 1,
-      "name": "Water Plants",
-      "boopSize": {
-        "id": 1,
-        "name": "small",
-        "value": 3
-      },
-      "boopSizeId": 1
-    },
-    "completedBy": null,
-    "taskTypeId": 1,
-    "date_completed": null
-  },
-  {
-    "id": 6,
-    "tags": null,
-    "choreId": 1,
-    "dueDate": "2025-07-18",
-    "startDate": "2025-06-20",
-    "taskType": {
-      "id": 2,
-      "name": "Fertilise Plants",
-      "boopSize": {
-        "id": 2,
-        "name": "medium",
-        "value": 5
-      },
-      "boopSizeId": 2
-    },
-    "completedBy": null,
-    "taskTypeId": 2,
-    "date_completed": null
+
+// Functions to return tasks
+const getTask = async (taskId: number): Promise<Task> => {
+  const { data, error } = await supabase
+    .from("tasks")
+    .select(taskSelect)
+    .is("id", taskId)
+    .overrideTypes<Task[], {merge: false}>()
+  if (error) throw error;
+  return data[0];
+}
+const getOpenTasks = async (): Promise<Task[]> => {
+  const { data, error } = await supabase
+    .from("tasks")
+    .select(taskSelect)
+    .is("date_completed", null)
+    .overrideTypes<Task[], {merge: false}>()
+    if (error) throw error;
+    return data;
+}
+
+const getCompletedTasks = async (): Promise<Task[]> => {
+  const { data, error } = await supabase
+    .from("tasks")
+    .select(taskSelect)
+    .neq("date_completed", null)
+    .overrideTypes<Task[], {merge: false}>()
+  if (error) throw error;
+  return data;
+}
+
+const addTask = async (choreId: number,  taskTypeId: number, startDate: string|null = null, tags: Tag[] = []): Promise<Task> => {
+
+  // check if task types exist. if no, throw error.
+  // check if chore exists, if no, throw error
+  // if yes,
+
+  const taskData = {
+    // Note: arguments to add
+    //     chore_id: (this should be passed as argument)
+    //     task_type_id: this key is needed
+    //     start_date: startDate (set to today if not provided),
+    //     due_date: (deduce from start date + task type frequency)
+    //   id: number; (should not be provided)
+    //     task_types: (should not be present)
+    //     completed_by: completedBy, (should not be present)
+    //     date_completed: dateCompleted, (should not be present)
   }
-].sort((a, b) => a.id - b.id)
+  const { data, error } = await supabase
+    .from('tasks')
+    .insert(taskData) // should include the id of the task type
+    .select(taskSelect)
+    .overrideTypes<Task[], {merge: false}>()
+  if (error) throw error;
+  return data[0];
+}
+
+const completeTask = async (taskId: number): Promise<Task[]> => {
+  // Logic: Get boopSize of current task
+  // Get tasks where boopsize <= W where choreId = X and completed = False
+  // set "completed_by" and "date_completed" for each task
+  // return all completed tasks
+
+  const date_completed = DateTime.now().toISODate()
+  // The taskId must be used to query tasks to complete
+    const task = await getTask(taskId);
+    const boopSizeValue = task.taskType.boopSize.value
+
+    const eligibleTasksResult = await supabase
+      .from("tasks")
+      // .select(`id, task_types!inner(boop_sizes!inner(value)`)
+      .select(taskSelect)
+      .is("chore_id", task.choreId)
+      .lte("task_types.boop_sizes.value", task.taskType.boopSize.value)
+      .is("date_completed", null)
+      .overrideTypes<Task[], {merge: false}>()
+
+    if (eligibleTasksResult.error) throw eligibleTasksResult.error
+    const eligibleTaskIds: number[] = eligibleTasksResult.data.map((row) => row.id)
+    const { data, error } = await supabase
+      .from("tasks")
+      .update({completedBy: task.id, date_completed})
+      .in('id', eligibleTaskIds)
+      .select(taskSelect)
+      .overrideTypes<Task[], {merge: false}>()
+    if (error) throw error;
+    return data
+}
+
+const deleteTask = async (taskId: number): Promise<void> => {
+  const { error } = await supabase
+    .from("tasks")
+      .delete()
+      .eq("id", taskId)
+    .select()
+    .overrideTypes<Task[], {merge: false}>()
+  if (error) throw error;
+}
+
+export { type Task,  };
