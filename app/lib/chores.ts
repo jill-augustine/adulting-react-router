@@ -1,15 +1,25 @@
-import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
-import {type Task} from "~/lib/tasks";
-import {type ReturnedData, type ReturnedChore, supabase} from "~/lib/client";
-import type {QueryData, QueryResult} from "@supabase/supabase-js";
-import type {TaskType} from "~/lib/task-types";
+import { supabase } from "~/lib/client";
+import { type Task, taskSelect } from "~/lib/tasks";
+import { type TaskType, taskTypeSelect } from "~/lib/task-types";
+import { type Tag, tagsSelect } from "~/lib/tags";
 
 type Chore = {
   id: number;
   name: string;
   description: string;
   tasks: Task[],
+  taskTypes: TaskType[]
+  tags: Tag[]
 }
+
+const choreSelect = `
+  id,
+  name,
+  description,
+  tasks (${taskSelect}),
+  taskTypes:task_types (${taskTypeSelect}),
+  tags (${tagsSelect})
+  `
 
 // Supabase fetch functions that return an array of objects that are then renamed `convertResponseToChores`
 // Returns ordered array of chores
@@ -17,16 +27,7 @@ type Chore = {
 const getAllChores = async (): Promise<Chore[]> => {
   const { data, error } = await supabase
     .from('chores')
-    .select(`
-      *,
-      tasks (
-        *,
-        task_types (
-          *,
-          boop_sizes (*)
-        )
-      )
-    `)
+    .select(choreSelect)
     .overrideTypes<Chore[], {merge: false}>()
   if (error) throw error;
   return data.sort((a, b) => a.id - b.id);
@@ -35,16 +36,7 @@ const getAllChores = async (): Promise<Chore[]> => {
 const getChore = async (choreId: number): Promise<Chore> => {
   const { data, error } = await supabase
     .from('chores')
-    .select(`
-      *,
-      tasks (
-        *,
-        task_types (
-          *,
-          boop_sizes (*)
-        )
-      )
-    `)
+    .select(choreSelect)
     .eq('id', choreId)
     .limit(1)
     .overrideTypes<Chore[], {merge: false}>()
@@ -58,7 +50,7 @@ const addChore = async(chore: {name: string, description: string}): Promise<Chor
   const { data, error } = await supabase
     .from('chores')
     .insert([chore])
-    .select()
+    .select(choreSelect)
     .overrideTypes<Chore[], {merge: false}>()
   if (error) throw error;
   return data[0]
@@ -68,7 +60,7 @@ const updateChore = async (chore: Omit<Chore, "tasks">): Promise<Chore> => {
   const { data, error } = await supabase
     .from('chores')
     .upsert(chore)
-    .select()
+    .select(choreSelect)
     .overrideTypes<Chore[], {merge: false}>()
   if (error) throw error;
   return data[0]
@@ -80,14 +72,18 @@ const deleteChore = async (choreId: number): Promise<Chore> => {
     .from('chores')
     .delete()
     .eq('id', choreId)
-    .select()
+    .select(choreSelect)
     .overrideTypes<Chore[], {merge: false}>()
   if (error) throw error;
   return data[0]
 }
 
-const getTaskTypesForChore = (chore: Chore) => {
-  return new Set(chore.tasks.map((task) => task.taskType.id))
-}
 
-export { type Chore, getTaskTypesForChore }
+export {
+  type Chore,
+  addChore,
+  getAllChores,
+  getChore,
+  updateChore,
+  deleteChore,
+}

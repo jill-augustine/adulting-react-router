@@ -1,27 +1,28 @@
-import { type TaskType } from "~/lib/task-types";
 import {
-  type AdultingData,
-  type ReturnedChore,
-  type ReturnedData,
-  type ReturnedTask,
-  supabase, taskSelect
+  supabase,
 } from "~/lib/client";
-import type { QueryData, QueryResult} from "@supabase/supabase-js";
-import type {Tag} from "~/lib/tags";
+import { type TaskType, taskTypeSelect } from "~/lib/task-types";
 import { DateTime } from "luxon"
 
 type Task = {
   id: number;
-  tags: null,
   choreId: number;
   dueDate: string;
   startDate: string;
-  // Note: the singular "type" not "Types"
   taskType: TaskType;
-  // Note: Not including task_type_id because we include the taskType directly
   completedBy: string | null;
   dateCompleted: string | null;
 }
+
+const taskSelect = `
+  id,
+  choreId:chore_id,
+  startDate:start_date,
+  dueDate:due_date,
+  dateCompleted:date_completed,
+  completedBy:completed_by,
+  taskType:task_types(${taskTypeSelect})
+  ` // not task_type_id
 
 // Functions to return tasks
 const getTask = async (taskId: number): Promise<Task> => {
@@ -53,7 +54,7 @@ const getCompletedTasks = async (): Promise<Task[]> => {
   return data;
 }
 
-const addTask = async (choreId: number,  taskTypeId: number, startDate: string|null = null, tags: Tag[] = []): Promise<Task> => {
+const addTask = async (choreId: number,  taskTypeId: number, startDate: string|null = null): Promise<Task> => {
 
   // check if task types exist. if no, throw error.
   // check if chore exists, if no, throw error
@@ -86,21 +87,19 @@ const completeTask = async (taskId: number): Promise<Task[]> => {
   // return all completed tasks
 
   const date_completed = DateTime.now().toISODate()
-  // The taskId must be used to query tasks to complete
+  // Use task to get associated BoopSize
     const task = await getTask(taskId);
-    const boopSizeValue = task.taskType.boopSize.value
 
     const eligibleTasksResult = await supabase
       .from("tasks")
-      // .select(`id, task_types!inner(boop_sizes!inner(value)`)
       .select(taskSelect)
       .is("chore_id", task.choreId)
       .lte("task_types.boop_sizes.value", task.taskType.boopSize.value)
       .is("date_completed", null)
       .overrideTypes<Task[], {merge: false}>()
-
     if (eligibleTasksResult.error) throw eligibleTasksResult.error
     const eligibleTaskIds: number[] = eligibleTasksResult.data.map((row) => row.id)
+
     const { data, error } = await supabase
       .from("tasks")
       .update({completedBy: task.id, date_completed})
@@ -111,14 +110,24 @@ const completeTask = async (taskId: number): Promise<Task[]> => {
     return data
 }
 
-const deleteTask = async (taskId: number): Promise<void> => {
-  const { error } = await supabase
+const deleteTask = async (taskId: number): Promise<Task> => {
+  const { data, error } = await supabase
     .from("tasks")
       .delete()
       .eq("id", taskId)
     .select()
     .overrideTypes<Task[], {merge: false}>()
   if (error) throw error;
+  return data[0]
 }
 
-export { type Task,  };
+export {
+  type Task,
+  taskSelect,
+  addTask,
+  getTask,
+  getCompletedTasks,
+  getOpenTasks,
+  // No update method planned
+  deleteTask,
+};

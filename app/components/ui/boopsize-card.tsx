@@ -1,5 +1,5 @@
 import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
-import { type BoopSize, data } from "~/lib/boop-sizes";
+import { type BoopSize } from "~/lib/boop-sizes";
 
 const BoopSizeCard = ({boopSize}: {boopSize: BoopSize}) => {
   return (

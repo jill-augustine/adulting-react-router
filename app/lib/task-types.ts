@@ -1,11 +1,77 @@
-import { type BoopSize } from "~/lib/boop-sizes";
+import { type BoopSize, boopSizeSelect } from "~/lib/boop-sizes";
+import { type Tag, tagsSelect } from "~/lib/tags";
+import { supabase } from "~/lib/client";
 
 type TaskType = {
   id: number;
-  // Note: Not "boop_sizes" as in ReturnedTaskType
   boopSize: BoopSize
   name: string;
-  boopSizeId: number;
+  tags: string[];
 }
 
-export { type TaskType };
+const taskTypeSelect = `
+  id,
+  name,
+  boopSize:boop_sizes(${boopSizeSelect}),
+  tags(${tagsSelect})
+` // not boop_size_id // not tag_id
+
+const addTaskType = async (name: string, boopSize: BoopSize, tags: Tag[]) : Promise<TaskType> => {
+  const { data, error } = await supabase
+    .from("task_types")
+    .insert({name, boop_sizes: boopSize, tags})
+    .select(taskTypeSelect)
+    .overrideTypes<TaskType[], {merge: false}>()
+  if (error) throw error;
+  return data[0];
+}
+
+const getTaskType = async (taskTypeId: number) : Promise<TaskType> => {
+  const { data, error } = await supabase
+    .from("task_types")
+    .select(taskTypeSelect)
+    .eq("id", taskTypeId)
+    .overrideTypes<TaskType[], {merge: false}>()
+  if (error) throw error;
+  return data[0]
+}
+
+const getAllTaskTypes = async (): Promise<TaskType[]> => {
+  const { data, error } = await supabase
+  .from("task_types")
+  .select(taskTypeSelect)
+  .overrideTypes<TaskType[], {merge: false}>()
+  if (error) throw error;
+  return data
+}
+
+// Add tags in tags.ts because updating tags doesn't show what should be added or removed.
+const updateTaskType = async (name: string, boopSize: BoopSize) : Promise<TaskType> => {
+  const { data, error } = await supabase
+    .from("task_types")
+    .update({name, boop_size: boopSize})
+    .select(taskTypeSelect)
+    .overrideTypes<TaskType[], {merge: false}>()
+  if (error) throw error;
+  return data[0]
+}
+
+const deleteTaskType = async (taskTypeId: number) : Promise<TaskType> => {
+  const { data, error } = await supabase
+    .from("task_types")
+    .delete()
+    .eq("id", taskTypeId)
+    .select(taskTypeSelect)
+    .overrideTypes<TaskType[], {merge: false}>()
+  if (error) throw error;
+  return data[0]
+}
+
+export {
+  type TaskType,
+  taskTypeSelect,
+  addTaskType,
+  getTaskType,
+  updateTaskType,
+  deleteTaskType,
+};
