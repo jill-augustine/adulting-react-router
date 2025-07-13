@@ -1,6 +1,16 @@
-import {type BoopSize, boopSizeSelect} from "@/lib/boop-sizes";
-import {type Tag, tagsSelect} from "@/lib/tags";
+import {type BoopSize, boopSizeSelect} from "@/boop-sizes/boop-sizes.service";
+import {type Tag, tagsSelect} from "@/tags/tags.service"
 import {supabase} from "@/lib/client";
+
+export {
+  type TaskType,
+  taskTypeSelect,
+  addTaskType,
+  getTaskType,
+  getAllTaskTypes,
+  updateTaskType,
+  deleteTaskType,
+};
 
 type TaskType = {
   id: number;
@@ -16,10 +26,10 @@ const taskTypeSelect = `
   tags(${tagsSelect})
 ` // not boop_size_id // not tag_id
 
-const addTaskType = async (name: string, boopSize: BoopSize, tags: Tag[]): Promise<TaskType> => {
+const addTaskType = async (name: string, boopSize: BoopSize, tags: Tag[] = []): Promise<TaskType> => {
   const {data, error} = await supabase
     .from("task_types")
-    .insert({name, boop_sizes: boopSize, tags})
+    .insert({name, boop_size_id: boopSize.id, tags})
     .select(taskTypeSelect)
     .overrideTypes<TaskType[], { merge: false }>()
   if (error) throw error;
@@ -67,12 +77,3 @@ const deleteTaskType = async (taskTypeId: number): Promise<TaskType> => {
   return data[0]
 }
 
-export {
-  type TaskType,
-  taskTypeSelect,
-  addTaskType,
-  getTaskType,
-  getAllTaskTypes,
-  updateTaskType,
-  deleteTaskType,
-};
