@@ -27,6 +27,9 @@ const getTagById = async (tagId: number): Promise<Tag> => {
     .eq('id', tagId)
     .overrideTypes<Tag[], { merge: false }>()
   if (error) throw error;
+  if (data[0] === undefined) {
+    throw new Error(`Tag '${tagId}' not found`);
+  }
   return data[0]
 }
 
@@ -37,6 +40,9 @@ const getTagByName = async (name: string): Promise<Tag> => {
     .eq('name', name)
     .overrideTypes<Tag[], { merge: false }>()
   if (error) throw error;
+  if (data[0] === undefined) {
+    throw new Error(`No Tag matching the name '${name}' was found.`);
+  }
   return data[0]
 }
 
