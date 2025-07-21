@@ -1,8 +1,9 @@
+import {redirect, useLoaderData} from "react-router";
+import type {ActionFunctionArgs, LoaderFunctionArgs} from "react-router-dom"
+import * as z from "zod"
 import {getAllTaskTypes, getTaskType, addTaskType, type TaskType} from "./task-types.service";
 import {TaskTypeCreateCard, TaskTypeDetailsCard, TaskTypeSummaryCard} from "@/components/ui/tasktype-card";
-import {redirect, useLoaderData} from "react-router";
 import {getBoopSizeByName} from "@/boop-sizes/boop-sizes.service";
-import type {ActionFunctionArgs, LoaderFunctionArgs} from "react-router-dom"
 import {getTagByName} from "@/tags/tags.service.ts";
 
 export {
@@ -51,15 +52,19 @@ const createAction = async ({
 
 // Returns BoopSize and Tags[] objects, not just their IDs.
 const parseTaskTypeForm = async (formData: FormData) => {
-  const nameValue = formData.get("task-type-name")
-  if (typeof nameValue !== "string") throw new Error("name must be a string");
+  const taskTypeFormSchema = z.object({
+    "task-type-name": z.string(),
+    "boop-size-name": z.string(),
+    "tag-names": z.string(),
+  })
+
+  const {data: parsedFormData, error} = taskTypeFormSchema.safeParse(formData);
+  if (error) throw error;
 
   // const boopSizeNameValue = formData.get("boop-size-name")
   // if (typeof boopSizeNameValue !== "string") throw new Error("boop-size must be a string");
   const boopSizeNameValue = "small"
 
-  const tagsValue = formData.get("tag-names")
-  if (typeof tagsValue !== "string") throw new Error("tagsValue must be a string");
   // Option A: JSON object
   // const tagNamesParsed = JSON.parse(tagsValue);
   // if (!(tagNamesParsed instanceof Array) ||
@@ -77,7 +82,7 @@ const parseTaskTypeForm = async (formData: FormData) => {
     return getTagByName(tagName)
   }))
   return {
-    name: nameValue, boopSize, tags
+    name: parsedFormData["task-type-name"], boopSize, tags
   };
 
 
