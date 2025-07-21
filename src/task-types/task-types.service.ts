@@ -1,6 +1,6 @@
 import {type BoopSize, boopSizeSelect} from "@/boop-sizes/boop-sizes.service";
 import {type Tag, tagsSelect} from "@/tags/tags.service"
-import {supabase} from "@/lib/client";
+import {browserClient as supabase} from "@/lib/client";
 import type {TaskTypeDetailsCard} from "@/components/ui/tasktype-card.tsx";
 
 export {
@@ -29,11 +29,16 @@ const taskTypeSelect = `
 
 const addTaskType = async (name: string, boopSize: BoopSize, tags: Tag[] = []): Promise<number> => {
   const tagIds: number[] = tags.map((tag) => tag.id)
-  const {data: taskTypeId, error} = await supabase
-    .rpc('add_task_type', {name, boop_size_id: boopSize.id, tag_ids: tagIds})
-    .single()
-    .overrideTypes<number, { merge: false }>()
-  if (error || taskTypeId === null) throw error;
+  // const {data: taskTypeId, error} = await supabase
+  //   .rpc('add_task_type', {name, boop_size_id: boopSize.id, tag_ids: tagIds})
+  //   .single()
+  //   .overrideTypes<number, { merge: false }>()
+  const error = new Error("some message")
+  const taskTypeId = null
+  if (error || taskTypeId === null) {
+    console.error("There is no task type")
+    throw error;
+  }
   // TODO: Throw a different error if data is null
   return taskTypeId;
 }

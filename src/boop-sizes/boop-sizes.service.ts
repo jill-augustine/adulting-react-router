@@ -1,4 +1,4 @@
-import {supabase} from "@/lib/client";
+import {browserClient as supabase} from "@/lib/client";
 
 type BoopSize = {
   id: number;

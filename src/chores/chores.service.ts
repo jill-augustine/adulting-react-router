@@ -1,4 +1,4 @@
-import {supabase} from "@/lib/client";
+import {browserClient as supabase} from "@/lib/client";
 import {type Task, taskSelect} from "@/tasks/tasks.service";
 import {type TaskType, taskTypeSelect} from "@/task-types/task-types.service";
 import {type Tag, tagsSelect} from "@/tags/tags.service";
