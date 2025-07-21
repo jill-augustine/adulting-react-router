@@ -1,21 +1,16 @@
--- TODO: Remove anon policies and add user-specific policies
-
-create policy "Anon can Insert"
+create policy "authenticated non-anonymous insert"
     on "public"."join_task_types_tags"
     as PERMISSIVE
     for INSERT
-    to anon
+    to authenticated
     with check (
-    true
+    (auth.jwt() ->> 'is_anonymous'::text)::boolean = false
     );
 
-create policy "Anon can Insert"
+
+create policy "authenticated non-anonymous insert"
     on "public"."task_types"
-    as PERMISSIVE
-    for INSERT
-    to anon
+    to authenticated
     with check (
-    true
+    (((auth.jwt() ->> 'is_anonymous'::text))::boolean = false)
     );
-
-
