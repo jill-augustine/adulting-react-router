@@ -1,5 +1,5 @@
 import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {type Tag} from "@/lib/tags";
+import {type Tag} from "@/tags/tags.service";
 
 const TagCard = ({tag}: { tag: Tag }) => {
   return (

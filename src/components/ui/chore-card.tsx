@@ -1,5 +1,5 @@
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {type Chore} from "@/lib/chores";
+import {type Chore} from "@/chores/chores.service";
 
 const ChoreSummaryCard = ({chore}: { chore: Chore }) => {
   const openTasks = chore.tasks.filter((t) => t.completedBy === null)
@@ -39,7 +39,8 @@ const ChoreDetailsCard = ({chore}: { chore: Chore }) => {
         <CardDescription>
           {chore.description}<br/><br/>
           Number of tasks: {chore.tasks.length}<br/>
-          Number of TasksTypes: {chore.taskTypes.length}
+          Number of TasksTypes: {chore.taskTypes.length}<br/>
+          Tags: {JSON.stringify(chore.tags)}
         </CardDescription>
       </CardContent>
       {/*<CardFooter>*/}

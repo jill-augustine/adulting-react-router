@@ -1,6 +1,6 @@
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-// import { type TaskType, getTaskTypesForTaskType}from "@/lib/taskTypes";
-import {type TaskType} from "@/lib/task-types";
+// import { type TaskType, getTaskTypesForTaskType}from "@/task-types/task-types.service";
+import {type TaskType} from "@/task-types/task-types.service";
 
 const TaskTypeSummaryCard = ({taskType}: { taskType: TaskType }) => {
   return (
@@ -42,7 +42,22 @@ const TaskTypeDetailsCard = ({taskType}: { taskType: TaskType }) => {
   )
 }
 
+import {Form} from "react-router";
+
+const TaskTypeCreateCard = () => {
+  return (
+    <Form method="post">
+      TaskType Name: <input type="text" name="task-type-name"/><br/>
+      BoopSize Name: <input type="text" name="boop-size-name"/><br/>
+      Tag Names: <input type="text" name="tag-names"/><br/>
+      <button type="submit">Submit</button>
+    </Form>
+  );
+}
+
+
 export {
   TaskTypeDetailsCard,
   TaskTypeSummaryCard,
+  TaskTypeCreateCard,
 }

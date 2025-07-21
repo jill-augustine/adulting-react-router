@@ -1,6 +1,17 @@
-import {type BoopSize, boopSizeSelect} from "@/lib/boop-sizes";
-import {type Tag, tagsSelect} from "@/lib/tags";
-import {supabase} from "@/lib/client";
+import {type BoopSize, boopSizeSelect} from "@/boop-sizes/boop-sizes.service";
+import {type Tag, tagsSelect} from "@/tags/tags.service"
+import {browserClient as supabase} from "@/lib/client";
+import type {TaskTypeDetailsCard} from "@/components/ui/tasktype-card.tsx";
+
+export {
+  type TaskType,
+  taskTypeSelect,
+  addTaskType,
+  getTaskType,
+  getAllTaskTypes,
+  updateTaskType,
+  deleteTaskType,
+};
 
 type TaskType = {
   id: number;
@@ -16,14 +27,20 @@ const taskTypeSelect = `
   tags(${tagsSelect})
 ` // not boop_size_id // not tag_id
 
-const addTaskType = async (name: string, boopSize: BoopSize, tags: Tag[]): Promise<TaskType> => {
-  const {data, error} = await supabase
-    .from("task_types")
-    .insert({name, boop_sizes: boopSize, tags})
-    .select(taskTypeSelect)
-    .overrideTypes<TaskType[], { merge: false }>()
-  if (error) throw error;
-  return data[0];
+const addTaskType = async (name: string, boopSize: BoopSize, tags: Tag[] = []): Promise<number> => {
+  const tagIds: number[] = tags.map((tag) => tag.id)
+  // const {data: taskTypeId, error} = await supabase
+  //   .rpc('add_task_type', {name, boop_size_id: boopSize.id, tag_ids: tagIds})
+  //   .single()
+  //   .overrideTypes<number, { merge: false }>()
+  const error = new Error("some message")
+  const taskTypeId = null
+  if (error || taskTypeId === null) {
+    console.error("There is no task type")
+    throw error;
+  }
+  // TODO: Throw a different error if data is null
+  return taskTypeId;
 }
 
 const getTaskType = async (taskTypeId: number): Promise<TaskType> => {
@@ -67,12 +84,3 @@ const deleteTaskType = async (taskTypeId: number): Promise<TaskType> => {
   return data[0]
 }
 
-export {
-  type TaskType,
-  taskTypeSelect,
-  addTaskType,
-  getTaskType,
-  getAllTaskTypes,
-  updateTaskType,
-  deleteTaskType,
-};

@@ -1,4 +1,4 @@
-import {supabase} from "@/lib/client";
+import {browserClient as supabase} from "@/lib/client";
 
 type BoopSize = {
   id: number;
@@ -15,6 +15,9 @@ const getBoopSizeByName = async (name: string): Promise<BoopSize> => {
     .eq('name', name)
     .overrideTypes<BoopSize[], { merge: false }>()
   if (error) throw error;
+  if (data[0] === undefined) {
+    throw new Error(`No BoopSize matching the name '${name}' was found.`);
+  }
   return data[0];
 }
 const getBoopSizeById = async (boopSizeId: number): Promise<BoopSize> => {
@@ -24,6 +27,9 @@ const getBoopSizeById = async (boopSizeId: number): Promise<BoopSize> => {
     .eq('id', boopSizeId)
     .overrideTypes<BoopSize[], { merge: false }>()
   if (error) throw error;
+  if (data[0] === undefined) {
+    throw new Error(`BoopSize '${boopSizeId}' not found`);
+  }
   return data[0];
 }
 
