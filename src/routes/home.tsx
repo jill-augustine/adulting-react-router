@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export default function Home() {
+const Home = () => {
   return (
     <Card>
       <CardHeader>
@@ -25,3 +25,10 @@ export default function Home() {
     </Card>
   )
 }
+
+const route = {
+  path: "/home",
+  Component: Home
+}
+
+export default route

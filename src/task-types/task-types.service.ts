@@ -1,5 +1,6 @@
-import {type BoopSize, boopSizeSelect} from "@/boop-sizes/boop-sizes.service";
-import {type Tag, tagsSelect} from "@/tags/tags.service"
+import * as z from 'zod';
+import {type BoopSize, boopSizeSelect, getBoopSizeByName} from "@/boop-sizes/boop-sizes.service";
+import {type Tag, tagsSelect, getTagByName} from "@/tags/tags.service"
 import {browserClient as supabase} from "@/lib/client";
 import type {TaskTypeDetailsCard} from "@/components/ui/tasktype-card.tsx";
 
@@ -11,6 +12,7 @@ export {
   getAllTaskTypes,
   updateTaskType,
   deleteTaskType,
+  parseTaskTypeForm,
 };
 
 type TaskType = {
@@ -84,3 +86,38 @@ const deleteTaskType = async (taskTypeId: number): Promise<TaskType> => {
   return data[0]
 }
 
+// Returns BoopSize and Tags[] objects, not just their IDs.
+const parseTaskTypeForm = async (formData: FormData) => {
+  const taskTypeFormSchema = z.object({
+    "task-type-name": z.string(),
+    "boop-size-name": z.string(),
+    "tag-names": z.string(),
+  })
+
+  const {data: parsedFormData, error} = taskTypeFormSchema.safeParse(formData);
+  if (error) throw error;
+
+  // const boopSizeNameValue = formData.get("boop-size-name")
+  // if (typeof boopSizeNameValue !== "string") throw new Error("boop-size must be a string");
+  const boopSizeNameValue = "small"
+
+  // Option A: JSON object
+  // const tagNamesParsed = JSON.parse(tagsValue);
+  // if (!(tagNamesParsed instanceof Array) ||
+  //   tagNamesParsed.some((t) => typeof t !== "string")
+  // ) {
+  //   throw new Error("tag-names must be an array of strings");
+  // }
+  // Option B: Comma-separated values
+  // const tagNamesParsed = tagsValue.split(",").map(s => s.trim());
+
+  const tagNamesParsed = ["plants", "cleaning"]
+  // Allow these to throw errors if they happen
+  const boopSize = await getBoopSizeByName(boopSizeNameValue)
+  const tags = await Promise.all(tagNamesParsed.map((tagName) => {
+    return getTagByName(tagName)
+  }))
+  return {
+    name: parsedFormData["task-type-name"], boopSize, tags
+  };
+}

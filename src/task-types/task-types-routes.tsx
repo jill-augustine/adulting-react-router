@@ -1,7 +1,7 @@
 import {redirect, useLoaderData} from "react-router";
 import type {ActionFunctionArgs, LoaderFunctionArgs} from "react-router-dom"
 import * as z from "zod"
-import {getAllTaskTypes, getTaskType, addTaskType, type TaskType} from "./task-types.service";
+import {getAllTaskTypes, getTaskType, addTaskType, type TaskType, parseTaskTypeForm} from "./task-types.service";
 import {TaskTypeCreateCard, TaskTypeDetailsCard, TaskTypeSummaryCard} from "@/components/ui/tasktype-card";
 import {getBoopSizeByName} from "@/boop-sizes/boop-sizes.service";
 import {getTagByName} from "@/tags/tags.service.ts";
@@ -50,40 +50,24 @@ const createAction = async ({
   }
 }
 
-// Returns BoopSize and Tags[] objects, not just their IDs.
-const parseTaskTypeForm = async (formData: FormData) => {
-  const taskTypeFormSchema = z.object({
-    "task-type-name": z.string(),
-    "boop-size-name": z.string(),
-    "tag-names": z.string(),
-  })
-
-  const {data: parsedFormData, error} = taskTypeFormSchema.safeParse(formData);
-  if (error) throw error;
-
-  // const boopSizeNameValue = formData.get("boop-size-name")
-  // if (typeof boopSizeNameValue !== "string") throw new Error("boop-size must be a string");
-  const boopSizeNameValue = "small"
-
-  // Option A: JSON object
-  // const tagNamesParsed = JSON.parse(tagsValue);
-  // if (!(tagNamesParsed instanceof Array) ||
-  //   tagNamesParsed.some((t) => typeof t !== "string")
-  // ) {
-  //   throw new Error("tag-names must be an array of strings");
-  // }
-  // Option B: Comma-separated values
-  // const tagNamesParsed = tagsValue.split(",").map(s => s.trim());
-
-  const tagNamesParsed = ["plants", "cleaning"]
-  // Allow these to throw errors if they happen
-  const boopSize = await getBoopSizeByName(boopSizeNameValue)
-  const tags = await Promise.all(tagNamesParsed.map((tagName) => {
-    return getTagByName(tagName)
-  }))
-  return {
-    name: parsedFormData["task-type-name"], boopSize, tags
-  };
-
-
+const route = {
+  path: "/task-types",
+  children: [
+    {
+      index: true,
+      Component: SummaryRoute,
+      loader: summaryLoader,
+    },
+    {
+      path: ":taskTypeId",
+      Component: DetailsRoute,
+      loader: detailsLoader,
+    },
+    {
+      path: "new",
+      Component: CreateRoute,
+      action: createAction,
+    }
+  ],
 }
+export default route;

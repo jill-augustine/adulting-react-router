@@ -15,6 +15,7 @@ import protectedRoute from "@/auth/protected"
 import signUpRoute from "@/auth/sign-up";
 import updatePasswordRoute from "@/auth/update-password";
 
+
 const isString = (value: unknown): value is string => {
   return value !== null && typeof value === "string";
 }
@@ -23,83 +24,39 @@ const isStringArray = (arr: unknown): arr is string[] =>
   Array.isArray(arr) && arr.every(isString);
 
 
+// Do not require user to be signed in
+const unprotectedRoutes = [
+  landingPageRoute,
+  forgotPasswordRoute,
+  signUpRoute,
+  // TODO: Update these below to import the route object only (also for auth).
+  //  Can both auths be in the same file?
+  {
+    path: "/auth",
+    children: [
+      authConfirmRoute,
+      authErrorRoute,
+    ]
+  },
+  {
+    path: "/login",
+    Component: Login,
+    action: loginAction,
+  },
+]
+
+const protectedLayoutRoute = {
+  Component: null,
+  children: protectedRoutes,
+}
+
+const unprotectedLayoutRoute = {
+  Component: null,
+  children: unprotectedRoutes,
+}
+
 export const router = createBrowserRouter([
-    landingPageRoute,
-    {
-      path: "/home",
-      Component: Home
-    },
-    forgotPasswordRoute,
-    logoutRoute,
-    protectedRoute,
-    signUpRoute,
-    updatePasswordRoute,
-    {
-      path: "/auth",
-      children: [
-        authConfirmRoute,
-        authErrorRoute,
-      ]
-    },
-    {
-      path: "/login",
-      Component: Login,
-      action: loginAction,
-    },
-    {
-      path: "/chores",
-      children: [
-        {
-          Component: choresRoutes.SummaryRoute,
-          index: true,
-          loader: choresRoutes.summaryLoader,
-        },
-        {
-          path: ":choreId",
-          Component: choresRoutes.DetailsRoute,
-          loader: choresRoutes.detailsLoader,
-        },
-      ],
-    },
-    {
-      path: "/task-types",
-      children: [
-        {
-          index: true,
-          Component: taskTypeRoutes.SummaryRoute,
-          loader: taskTypeRoutes.summaryLoader,
-        },
-        {
-          path: ":taskTypeId",
-          Component: taskTypeRoutes.DetailsRoute,
-          loader: taskTypeRoutes.detailsLoader,
-        },
-        {
-          path: "new",
-          Component: taskTypeRoutes.CreateRoute,
-          action: taskTypeRoutes.createAction,
-        }
-      ],
-    },
-    {
-      path: "boop-sizes",
-      children: [
-        {
-          index: true,
-          Component: boopSizeRoutes.SummaryRoute,
-          loader: boopSizeRoutes.summaryLoader,
-        }
-      ],
-    },
-    {
-      path: "tags",
-      children: [
-        {
-          index: true,
-          Component: tagsRoutes.SummaryRoute,
-          loader: tagsRoutes.summaryLoader,
-        }
-      ]
-    }
+    unprotectedLayoutRoute,
+    protectedLayoutRoute,
   ]
 )

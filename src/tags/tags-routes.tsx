@@ -2,10 +2,10 @@ import {type Tag, getAllTags} from "@/tags/tags.service";
 import {TagCard} from "@/components/ui/tag-card";
 import {useLoaderData} from "react-router";
 
-export {
-  SummaryRoute,
-  summaryLoader,
-}
+// export {
+//   SummaryRoute,
+//   summaryLoader,
+// }
 
 const SummaryRoute = () => {
   const {data} = useLoaderData();
@@ -15,3 +15,15 @@ const SummaryRoute = () => {
 const summaryLoader = async () => {
   return {data: await getAllTags()};
 }
+
+const route = {
+  path: "tags",
+  children: [
+    {
+      index: true,
+      Component: SummaryRoute,
+      loader: summaryLoader,
+    }
+  ]
+}
+export default route;
