@@ -62,8 +62,7 @@ const parseLoginForm = (formData: FormData): LoginFormData => {
   return parsedFormData
 }
 
-
-export default function Login() {
+const Login = () => {
   const fetcher = useFetcher<typeof loginAction>()
   const error = fetcher.data?.error
   const loading = fetcher.state === 'submitting'
@@ -136,3 +135,11 @@ export default function Login() {
     </div>
   )
 }
+
+const route = {
+  path: "/login",
+  Component: Login,
+  action: loginAction,
+}
+
+export default route

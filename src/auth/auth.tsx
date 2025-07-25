@@ -1,8 +1,9 @@
 import {browserClient as supabase} from '@/lib/client'
 import {type EmailOtpType} from '@supabase/supabase-js'
-import {type LoaderFunctionArgs, redirect, type RouteObject} from 'react-router'
+import {type LoaderFunctionArgs, redirect} from 'react-router'
+import {Page as AuthErrorPage} from "@/auth/auth.error"
 
-export async function loader({request}: LoaderFunctionArgs) {
+const authConfirmLoader = async ({request}: LoaderFunctionArgs) => {
   const requestUrl = new URL(request.url)
   const token_hash = requestUrl.searchParams.get('token_hash')
   const type = requestUrl.searchParams.get('type') as EmailOtpType | null
@@ -25,10 +26,18 @@ export async function loader({request}: LoaderFunctionArgs) {
   return redirect(`/auth/error?error=No token hash or type`)
 }
 
-const route: RouteObject = {
-  // nested within auth in routes.ts
-  path: "confirm",
-  loader: loader,
+const route = {
+  path: "/auth",
+  children: [
+    {
+      path: "confirm",
+      loader: authConfirmLoader,
+    },
+    {
+      path: "error",
+      Component: AuthErrorPage,
+    },
+  ]
 }
 
-export default route
+export default route;

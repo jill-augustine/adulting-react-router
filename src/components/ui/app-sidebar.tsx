@@ -1,4 +1,5 @@
 import * as React from "react"
+import * as z from "zod"
 import {GalleryVerticalEnd} from "lucide-react"
 // Adapted from: https://ui.shadcn.com/blocks/sidebar
 
@@ -156,7 +157,23 @@ const data = {
   ],
 }
 
-export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
+const navSubItemSchema = z.object({
+  title: z.string(),
+  url: z.string(),
+  isActive: z.boolean(),
+})
+
+const navMainSchema = z.object({
+  title: z.string(),
+  url: z.string(),
+  items: navSubItemSchema.array().optional(),
+}).array()
+
+type NavMain = z.infer<typeof navMainSchema>
+
+export function AppSidebar({navMain, ...props}: {
+  navMain: NavMain,
+} & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>
@@ -180,7 +197,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className="gap-2">
-            {data.navMain.map((item) => (
+            {navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
                   <a href={item.url} className="font-medium">
