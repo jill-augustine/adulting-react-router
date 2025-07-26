@@ -27,7 +27,7 @@ const Home = () => {
 }
 
 const route = {
-  path: "/home",
+  path: "home",
   Component: Home
 }
 

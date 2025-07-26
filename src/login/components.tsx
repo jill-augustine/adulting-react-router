@@ -1,76 +1,19 @@
-import * as z from "zod"
-import {Button} from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {Input} from '@/components/ui/input'
-import {Label} from '@/components/ui/label'
-import {type ActionFunctionArgs, Link, redirect, useFetcher} from 'react-router'
-import {
-  browserClient as supabase,
-  VITE_SUPABASE_TEST_USER_EMAIL as testUserEmail,
-  VITE_SUPABASE_TEST_USER_PASSWORD as testUserPassword,
-} from "@/lib/client";
+import {Link, useFetcher} from "react-router";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 
-export const loginAction = async ({request}: ActionFunctionArgs) => {
-  const loginFormSchema = z.object({
-    email: z.email(),
-    password: z.string(),
-  })
-  const formData = await request.formData()
-  let email: string
-  let password: string
-  if (formData.has('is-test-user')) {
-    email = testUserEmail
-    password = testUserPassword
-  } else {
-    const parsedFormData = parseLoginForm(formData)
-    email = parsedFormData.email
-    password = parsedFormData.password
-  }
-  const {error} = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  })
-
-  if (error) {
-    return {
-      error: error?.message ?? 'An error occurred',
-    }
-  }
-
-  // Update this route to redirect to an authenticated route. The user already has an active session.
-  return redirect('/protected')
+type LoginCardProps = {
+  error?: string;
+  loading: boolean;
+  fetcher: ReturnType<typeof useFetcher>;
+  testUserFetcher: ReturnType<typeof useFetcher>;
+  testUserError?: string;
+  testUserLoading: boolean;
 }
 
-const loginFormSchema = z.object({
-  email: z.email(),
-  password: z.string(),
-});
-type LoginFormData = z.infer<typeof loginFormSchema>
-
-const parseLoginForm = (formData: FormData): LoginFormData => {
-  const {data: parsedFormData, error} = loginFormSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-  })
-  if (error) throw error
-  return parsedFormData
-}
-
-const Login = () => {
-  const fetcher = useFetcher<typeof loginAction>()
-  const error = fetcher.data?.error
-  const loading = fetcher.state === 'submitting'
-
-  const testUserFetcher = useFetcher<typeof loginAction>({key: "login-test-user"})
-  const testUserError = testUserFetcher.data?.error
-  const testUserLoading = testUserFetcher.state === 'loading'
-
+export const LoginCard = ({error, loading, fetcher, testUserError, testUserLoading}: LoginCardProps) => {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -133,13 +76,5 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-const route = {
-  path: "/login",
-  Component: Login,
-  action: loginAction,
-}
-
-export default route

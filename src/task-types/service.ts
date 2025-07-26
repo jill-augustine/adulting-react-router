@@ -1,8 +1,7 @@
 import * as z from 'zod';
 import {type BoopSize, boopSizeSelect, getBoopSizeByName} from "@/boop-sizes/boop-sizes.service";
-import {type Tag, tagsSelect, getTagByName} from "@/tags/tags.service"
+import {tagsSelect, getTagByName, type Tag} from "@/tags/service.ts"
 import {browserClient as supabase} from "@/lib/client";
-import type {TaskTypeDetailsCard} from "@/components/ui/tasktype-card.tsx";
 
 export {
   type TaskType,

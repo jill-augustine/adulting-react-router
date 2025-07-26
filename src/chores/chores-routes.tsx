@@ -1,4 +1,4 @@
-import {ChoreDetailsCard, ChoreSummaryCard} from "@/components/ui/chore-card";
+import {ChoreDetailsCard, ChoreSummaryCard} from "@/components/chores/chore-card";
 import {type Chore, getAllChores, getChore} from "@/chores/chores.service";
 import {useLoaderData} from "react-router";
 import {type LoaderFunctionArgs} from "react-router-dom";
@@ -11,7 +11,7 @@ import {type LoaderFunctionArgs} from "react-router-dom";
 // }
 const SummaryRoute = () => {
   const {data} = useLoaderData();
-  return data.map((chore: Chore) => <ChoreSummaryCard chore={chore}></ChoreSummaryCard>)
+  return data.map((chore: Chore) => <ChoreSummaryCard chore={chore}/>)
 }
 
 const summaryLoader = async () => {
@@ -20,7 +20,7 @@ const summaryLoader = async () => {
 
 const DetailsRoute = () => {
   const {data}: { data: Chore } = useLoaderData();
-  return <ChoreDetailsCard chore={data}></ChoreDetailsCard>
+  return <ChoreDetailsCard chore={data}/>
 }
 
 const detailsLoader = async ({params}: LoaderFunctionArgs) => {
@@ -28,7 +28,7 @@ const detailsLoader = async ({params}: LoaderFunctionArgs) => {
 }
 
 const route = {
-  path: "/chores",
+  path: "chores",
   children: [
     {
       Component: SummaryRoute,

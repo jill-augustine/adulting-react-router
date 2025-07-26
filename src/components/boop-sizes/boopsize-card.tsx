@@ -1,5 +1,10 @@
-import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {type BoopSize} from "@/boop-sizes/boop-sizes.service";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import {type BoopSize} from "@/boop-sizes/boop-sizes.service.ts";
 
 const BoopSizeCard = ({boopSize}: { boopSize: BoopSize }) => {
   return (

@@ -1,5 +1,5 @@
 import {type RouteObject, Outlet} from "react-router";
-import {AppSidebar} from "@/components/ui/app-sidebar.tsx";
+import {AppSidebar} from "@/components/ui/app-sidebar";
 // Components
 import {
   Breadcrumb,
@@ -16,20 +16,20 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 // Protected routes
-import logoutRoute from '@/auth/logout'
-import protectedRoute from '@/auth/protected'
-import updatePasswordRoute from "@/auth/update-password";
+import logoutRoute from '@/logout/route'
+import protectedRoute from '@/protected/protected'
+import updatePasswordRoute from "@/update-password/route";
 import homeRoute from "@/routes/home"
 import choresRoute from "@/chores/chores-routes";
-import taskTypesRoute from "@/task-types/task-types-routes";
+import taskTypesRoute from "@/task-types/route";
 import boopSizesRoute from "@/boop-sizes/boop-sizes-routes"
-import tagsRoute from "@/tags/tags-routes"
+import tagsRoute from "@/tags/route"
 // Unprotected routes
 import landingPageRoute from "@/routes/landing-page"
-import authRoute from "@/auth/auth"
-import forgotPasswordRoute from "@/auth/forgot-password"
-import signUpRoute from "@/auth/sign-up";
-import loginRoute from "@/auth/login"
+import authRoute from "@/auth/route"
+import forgotPasswordRoute from "@/forgot-password/route"
+import signUpRoute from "@/sign-up/route";
+import loginRoute from "@/login/route"
 
 // TODO: Decide whether to split into two files (protected and unprotected)
 

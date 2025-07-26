@@ -1,5 +1,5 @@
 import {type BoopSize, getAllBoopSizes} from "@/boop-sizes/boop-sizes.service";
-import {BoopSizeCard} from "@/components/ui/boopsize-card";
+import {BoopSizeCard} from "@/components/boop-sizes/boopsize-card";
 import {useLoaderData} from "react-router";
 
 // export {
@@ -9,7 +9,7 @@ import {useLoaderData} from "react-router";
 
 const SummaryRoute = () => {
   const {data} = useLoaderData();
-  return data.map((boopSize: BoopSize) => <BoopSizeCard key={boopSize.id} boopSize={boopSize}></BoopSizeCard>)
+  return data.map((boopSize: BoopSize) => <BoopSizeCard key={boopSize.id} boopSize={boopSize}/>)
 }
 
 const summaryLoader = async () => {

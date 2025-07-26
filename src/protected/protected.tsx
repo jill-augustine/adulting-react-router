@@ -13,14 +13,14 @@ export const loader = async () => {
 }
 
 export function ProtectedPage() {
-  let data = useLoaderData<typeof loader>()
+  const data = useLoaderData<typeof loader>()
 
   return (
     <div className="flex items-center justify-center h-screen gap-2">
       <p>
         Hello <span className="text-primary font-semibold">{data.user.email}</span>
       </p>
-      <a href="/logout">
+      <a href="/src/logout/route">
         <Button>Logout</Button>
       </a>
     </div>
@@ -28,7 +28,7 @@ export function ProtectedPage() {
 }
 
 const route: RouteObject = {
-  path: "/protected",
+  path: "protected",
   Component: ProtectedPage,
   loader: loader,
 }

@@ -1,9 +1,10 @@
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card'
-import {type RouteObject, useSearchParams} from 'react-router'
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 
-export function Page() {
-  let [searchParams] = useSearchParams()
+type ErrorCardProps = {
+  searchParams: URLSearchParams,
+}
 
+export const ErrorCard = ({searchParams}: ErrorCardProps) => {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -27,10 +28,3 @@ export function Page() {
     </div>
   )
 }
-
-const route: RouteObject = {
-  path: "error",
-  Component: Page,
-}
-
-export default route

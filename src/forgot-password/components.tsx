@@ -1,56 +1,17 @@
-import {browserClient as supabase} from '@/lib/client'
-import {Button} from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {Input} from '@/components/ui/input'
-import {Label} from '@/components/ui/label'
-import {
-  type ActionFunctionArgs,
-  Link,
-  data,
-  redirect,
-  type RouteObject,
-  useFetcher,
-  useSearchParams,
-} from 'react-router'
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {Link, type useFetcher} from "react-router";
 
-
-export const action = async ({request}: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const email = formData.get('email') as string
-
-  const origin = new URL(request.url).origin
-
-  // Send the actual reset password email
-  const {error} = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/confirm?next=/update-password`,
-  })
-
-  if (error) {
-    return data(
-      {
-        error: error instanceof Error ? error.message : 'An error occurred',
-        data: {email},
-      },
-    )
-  }
-
-  return redirect('/forgot-password?success')
+type ForgotPasswordCardProps = {
+  success: boolean,
+  error?: string,
+  loading: boolean,
+  fetcher: ReturnType<typeof useFetcher>,
 }
 
-export function ForgotPassword() {
-  const fetcher = useFetcher<typeof action>()
-  let [searchParams] = useSearchParams()
-
-  const success = !!searchParams.has('success')
-  const error = fetcher.data?.error
-  const loading = fetcher.state === 'submitting'
-
+export const ForgotPasswordCard = ({success, error, loading, fetcher}: ForgotPasswordCardProps) => {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -107,13 +68,5 @@ export function ForgotPassword() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-const route: RouteObject = {
-  path: "/forgot-password",
-  Component: ForgotPassword,
-  action: action,
-};
-
-export default route

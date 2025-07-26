@@ -1,5 +1,3 @@
-import * as z from 'zod'
-import {browserClient as supabase} from '@/lib/client'
 import {Button} from '@/components/ui/button'
 import {
   Card,
@@ -10,56 +8,16 @@ import {
 } from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
-import {type ActionFunctionArgs, type RouteObject, Link, redirect, useFetcher, useSearchParams} from 'react-router'
+import {Link, useFetcher} from 'react-router'
 
-export const action = async ({request}: ActionFunctionArgs) => {
-  const url = new URL(request.url)
-  const origin = url.origin
-
-  const parsedFormData = parseSignUpForm(await request.formData())
-
-  const {error} = await supabase.auth.signUp({
-    email: parsedFormData.email,
-    password: parsedFormData.password,
-    options: {
-      emailRedirectTo: `${origin}/protected`,
-    },
-  })
-
-  if (error) {
-    return {error: error.message}
-  }
-
-  return redirect('/sign-up?success')
+type SignUpCardProps = {
+  fetcher: ReturnType<typeof useFetcher>,
+  success: boolean,
+  error?: string,
+  loading: boolean,
 }
 
-const parseSignUpForm = (formData: FormData) => {
-  console.log(formData)
-  const signUpFormSchema = z.object({
-    email: z.email(),
-    password: z.string(),
-    "repeat-password": z.string(),
-  }).refine((data) => data.password === data["repeat-password"], {
-    message: "Passwords don't match",
-    path: ["repeat-password"], // path of error
-  });
-  const {data: parsedFormData, error} = signUpFormSchema.safeParse({
-    email: formData.get('email'),
-    password: formData.get('password'),
-    "repeat-password": formData.get('repeat-password'),
-  })
-  if (error) throw error
-  return parsedFormData
-}
-
-export function SignUp() {
-  const fetcher = useFetcher<typeof action>()
-  let [searchParams] = useSearchParams()
-
-  const success = !!searchParams.has('success')
-  const error = fetcher.data?.error
-  const loading = fetcher.state === 'submitting'
-
+export const SignUpCard = ({fetcher, success, error, loading}: SignUpCardProps) => {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -128,11 +86,3 @@ export function SignUp() {
     </div>
   )
 }
-
-const route: RouteObject = {
-  path: '/sign-up',
-  Component: SignUp,
-  action: action,
-}
-
-export default route

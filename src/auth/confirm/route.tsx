@@ -1,9 +1,10 @@
+// Creating the route object including any loaders or actions, but excluding pages/components.
+
 import {browserClient as supabase} from '@/lib/client'
 import {type EmailOtpType} from '@supabase/supabase-js'
-import {type LoaderFunctionArgs, redirect} from 'react-router'
-import {Page as AuthErrorPage} from "@/auth/auth.error"
+import {type LoaderFunctionArgs, redirect, type RouteObject} from 'react-router'
 
-const authConfirmLoader = async ({request}: LoaderFunctionArgs) => {
+const loader = async ({request}: LoaderFunctionArgs) => {
   const requestUrl = new URL(request.url)
   const token_hash = requestUrl.searchParams.get('token_hash')
   const type = requestUrl.searchParams.get('type') as EmailOtpType | null
@@ -26,18 +27,10 @@ const authConfirmLoader = async ({request}: LoaderFunctionArgs) => {
   return redirect(`/auth/error?error=No token hash or type`)
 }
 
-const route = {
-  path: "/auth",
-  children: [
-    {
-      path: "confirm",
-      loader: authConfirmLoader,
-    },
-    {
-      path: "error",
-      Component: AuthErrorPage,
-    },
-  ]
-}
+const route: RouteObject =
+  {
+    path: "confirm",
+    loader,
+  }
 
 export default route;

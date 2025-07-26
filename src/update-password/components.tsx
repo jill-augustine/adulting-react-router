@@ -1,4 +1,3 @@
-import {browserClient as supabase} from '@/lib/client'
 import {Button} from '@/components/ui/button'
 import {
   Card,
@@ -9,36 +8,15 @@ import {
 } from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
-import {type ActionFunctionArgs, type RouteObject, redirect, useFetcher} from 'react-router'
+import {useFetcher} from 'react-router'
 
-export const action = async ({request}: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const password = formData.get('password') as string
-
-  if (!password) {
-    return {error: 'Password is required'}
-  }
-
-  const {error} = await supabase.auth.updateUser({password: password})
-
-  if (error) {
-    return {
-      error: error instanceof Error ? error.message : 'An error occurred',
-    }
-  }
-
-  // Redirect to sign-in page after successful password update
-  // TODO: replace the "protected" page with the "home" page
-  //  which is different from the "/" landing page
-  return redirect('/protected')
+type UpdatePasswordProps = {
+  fetcher: ReturnType<typeof useFetcher>,
+  loading: boolean,
+  error?: string,
 }
 
-export function Page() {
-  const fetcher = useFetcher<typeof action>()
-
-  const error = fetcher.data?.error
-  const loading = fetcher.state === 'submitting'
-
+export const UpdatePasswordCard = ({fetcher, loading, error}: UpdatePasswordProps) => {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -74,10 +52,3 @@ export function Page() {
     </div>
   )
 }
-
-const route: RouteObject = {
-  path: "update-password",
-  action: action,
-}
-
-export default route

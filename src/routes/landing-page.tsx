@@ -1,6 +1,6 @@
-import {type LoaderFunctionArgs, redirect, type RouteObject} from "react-router";
+import {redirect, type RouteObject} from "react-router";
 import {browserClient as supabase} from "@/lib/client.ts";
-import {ErrorBoundary} from "@/routes/error-boundary.tsx";
+import {ErrorBoundary} from "@/routes/error-boundary";
 
 const loader = async () => {
   const {data, error} = await supabase.auth.getUser()

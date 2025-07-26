@@ -1,5 +1,10 @@
-import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
-import {type Tag} from "@/tags/tags.service";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import {type Tag} from "@/tags/service.ts";
 
 const TagCard = ({tag}: { tag: Tag }) => {
   return (

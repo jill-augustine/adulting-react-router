@@ -1,5 +1,5 @@
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {type Chore} from "@/chores/chores.service";
+import {type Chore} from "@/chores/chores.service.ts";
 
 const ChoreSummaryCard = ({chore}: { chore: Chore }) => {
   const openTasks = chore.tasks.filter((t) => t.completedBy === null)
