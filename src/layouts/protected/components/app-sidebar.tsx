@@ -14,12 +14,12 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar.tsx"
 
 const navSubItemSchema = z.object({
   title: z.string(),
   url: z.string(),
-  isActive: z.boolean(),
+  isActive: z.boolean().optional(),
 })
 
 const navMainSchema = z.object({
@@ -30,29 +30,33 @@ const navMainSchema = z.object({
 
 type NavMain = z.infer<typeof navMainSchema>
 
-export function AppSidebar({navMain, ...props}: {
+const SidebarHeaderWithContent = ( => {
+  return <SidebarHeader>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton size="lg" asChild>
+          <a href="#">
+            <div
+              className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+              <GalleryVerticalEnd className="size-4"/>
+            </div>
+            <div className="flex flex-col gap-0.5 leading-none">
+              <span className="font-medium">Documentation</span>
+              <span className="">v1.0.0</span>
+            </div>
+          </a>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
+  </SidebarHeader>;
+}
+
+export const AppSidebar = ({navMain, ...props}):{
   navMain: NavMain,
-} & React.ComponentProps<typeof Sidebar>) {
+} & React.ComponentProps<typeof Sidebar> => {
   return (
-    <Sidebar variant="floating" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
-                <div
-                  className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <GalleryVerticalEnd className="size-4"/>
-                </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-medium">Documentation</span>
-                  <span className="">v1.0.0</span>
-                </div>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+    <Sidebar variant="inset" {...props}>
+      <SidebarHeaderWithContent/>
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu className="gap-2">
