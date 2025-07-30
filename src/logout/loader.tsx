@@ -1,4 +1,4 @@
-import {browserClient as supabase} from "@/lib/client.ts";
+import {browserClient as supabase} from "@/lib/client";
 import {redirect} from "react-router";
 
 export const loader = async () => {

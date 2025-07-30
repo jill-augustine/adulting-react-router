@@ -1,5 +1,5 @@
 import {useLoaderData} from "react-router";
-import {type TaskType} from "../service.ts";
+import {type TaskType} from "../service";
 import {TaskTypeSummaryCard} from "@/task-types/summary/components"
 
 export const Page = () => {

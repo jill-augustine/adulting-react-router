@@ -1,4 +1,4 @@
-import type {TaskType} from "@/task-types/service.ts";
+import type {TaskType} from "@/task-types/service";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
 export const TaskTypeSummaryCard = ({taskType}: { taskType: TaskType }) => {

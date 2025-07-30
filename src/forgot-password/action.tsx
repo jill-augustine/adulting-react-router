@@ -1,7 +1,7 @@
 import {type ActionFunctionArgs, data, redirect} from "react-router";
-import {browserClient as supabase} from "@/lib/client.ts";
+import {browserClient as supabase} from "@/lib/client";
 
-export const action = async ({request}: ActionFunctionArgs) => {
+export const action = async ({request}):ActionFunctionArgs) => {
   const formData = await request.formData()
   const email = formData.get('email') as string
 

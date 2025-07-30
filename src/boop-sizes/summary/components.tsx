@@ -3,10 +3,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle
-} from "@/components/ui/card";
-import {type BoopSize} from "@/boop-sizes/boop-sizes.service.ts";
+} from "@/components/ui/card.tsx";
+import {type BoopSize} from "@/boop-sizes/service";
 
-const BoopSizeCard = ({boopSize}: { boopSize: BoopSize }) => {
+const Components = ({boopSize}: { boopSize: BoopSize }) => {
   return (
     <Card key={boopSize.id}>
       <CardHeader>
@@ -23,4 +23,4 @@ const BoopSizeCard = ({boopSize}: { boopSize: BoopSize }) => {
     </Card>
   )
 }
-export {BoopSizeCard}
+export {Components}

@@ -4,7 +4,7 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import {type Tag} from "@/tags/service.ts";
+import {type Tag} from "@/tags/service";
 
 const TagCard = ({tag}: { tag: Tag }) => {
   return (

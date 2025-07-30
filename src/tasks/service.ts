@@ -1,7 +1,7 @@
 import {
   browserClient as supabase,
 } from "@/lib/client";
-import {type TaskType, taskTypeSelect} from "@/task-types/service.ts";
+import {type TaskType, taskTypeSelect} from "@/task-types/service";
 import {DateTime} from "luxon"
 
 type Task = {

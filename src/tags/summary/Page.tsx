@@ -1,4 +1,4 @@
-import {type Tag} from "@/tags/service.ts";
+import {type Tag} from "@/tags/service";
 import {TagCard} from "@/components/tags/tag-card";
 import {useLoaderData} from "react-router";
 

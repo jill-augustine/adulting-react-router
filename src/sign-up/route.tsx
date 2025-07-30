@@ -3,7 +3,7 @@ import {Page} from "@/sign-up/Page"
 import {action} from "@/sign-up/action";
 
 const route: RouteObject = {
-  path: '/sign-up',
+  path: 'sign-up',
   Component: Page,
   action,
 }

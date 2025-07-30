@@ -1,8 +1,10 @@
 import {createBrowserRouter} from "react-router"
-import {unprotectedLayoutRoute, protectedLayoutRoute} from "@/routes/layouts";
+import landingPageRoute from "@/landing-page/route"
+import {unprotectedLayoutRoute} from "@/layouts/unprotected/route.tsx";
+import {protectedLayoutRoute} from "@/layouts/protected/route.tsx";
 
 export const router = createBrowserRouter([
-    unprotectedLayoutRoute,
-    protectedLayoutRoute,
-  ]
-)
+  landingPageRoute,
+  unprotectedLayoutRoute,
+  protectedLayoutRoute,
+])

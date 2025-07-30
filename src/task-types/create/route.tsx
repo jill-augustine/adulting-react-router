@@ -1,5 +1,5 @@
 import {Page} from "@/task-types/create/Page";
-import {action} from "@/task-types/create/action.ts";
+import {action} from "@/task-types/create/action";
 import {type RouteObject} from "react-router";
 
 const route: RouteObject =

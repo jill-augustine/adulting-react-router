@@ -1,6 +1,6 @@
 import * as z from 'zod';
-import {type BoopSize, boopSizeSelect, getBoopSizeByName} from "@/boop-sizes/boop-sizes.service";
-import {tagsSelect, getTagByName, type Tag} from "@/tags/service.ts"
+import {type BoopSize, boopSizeSelect, getBoopSizeByName} from "@/boop-sizes/service";
+import {tagsSelect, getTagByName, type Tag} from "@/tags/service"
 import {browserClient as supabase} from "@/lib/client";
 
 export {

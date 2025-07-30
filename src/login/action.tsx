@@ -3,7 +3,7 @@ import {
   browserClient as supabase,
   VITE_SUPABASE_TEST_USER_EMAIL as testUserEmail,
   VITE_SUPABASE_TEST_USER_PASSWORD as testUserPassword
-} from "@/lib/client.ts";
+} from "@/lib/client";
 import {parseLoginForm} from "@/login/service";
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -29,6 +29,5 @@ export const action = async ({request}: ActionFunctionArgs) => {
     }
   }
 
-  // TODO: Update this route to redirect to an authenticated route. The user already has an active session.
-  return redirect('/protected')
+  return redirect('/home')
 }

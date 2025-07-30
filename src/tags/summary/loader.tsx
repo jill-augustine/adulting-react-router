@@ -1,4 +1,4 @@
-import {getAllTags} from "@/tags/service.ts";
+import {getAllTags} from "@/tags/service";
 
 
 export const loader = async () => {
