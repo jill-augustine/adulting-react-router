@@ -30,7 +30,7 @@ const navMainSchema = z.object({
 
 type NavMain = z.infer<typeof navMainSchema>
 
-const SidebarHeaderWithContent = ( => {
+const SidebarHeaderWithContent = () => {
   return <SidebarHeader>
     <SidebarMenu>
       <SidebarMenuItem>
@@ -51,9 +51,9 @@ const SidebarHeaderWithContent = ( => {
   </SidebarHeader>;
 }
 
-export const AppSidebar = ({navMain, ...props}):{
+export const AppSidebar = ({navMain, ...props}: {
   navMain: NavMain,
-} & React.ComponentProps<typeof Sidebar> => {
+}): React.ComponentProps<typeof Sidebar> => {
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeaderWithContent/>
