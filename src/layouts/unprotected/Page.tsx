@@ -1,4 +1,4 @@
-// import {Sidebar, Logout} from "@/layouts/protected/components.tsx";
+// import {Sidebar, Logout} from "@/layouts/protected/app-header.tsx";
 import {Outlet, useLoaderData} from "react-router";
 import {loader} from "@/layouts/protected/loader";
 
