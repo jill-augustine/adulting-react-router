@@ -5,7 +5,7 @@ import {
 } from '@supabase/ssr'
 import * as process from "node:process";
 
-/// <reference types="vite/types/importMeta.d.ts" />
+/// <reference types="vite/types/importMeta.d" />
 
 const VITE_SUPABASE_URL = import.meta.env?.VITE_SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
 const VITE_SUPABASE_ANON_KEY = import.meta.env?.VITE_SUPABASE_ANON_KEY ?? process.env.VITE_SUPABASE_ANON_KEY;

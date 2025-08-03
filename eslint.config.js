@@ -17,7 +17,14 @@ export default tseslint.config([
             {
                 rules: {
                     '@typescript-eslint/no-unused-vars': 'warn',
-                }
+                    'func-style': "error",
+                },
+            },
+            {
+                rules: {
+                    'func-style': 'off',
+                },
+                files: ['src/components/ui/**/*.*'],
             }
         ],
         languageOptions: {
