@@ -18,7 +18,5 @@ export const action = async ({request}: ActionFunctionArgs) => {
   }
 
   // Redirect to sign-in page after successful password update
-  // TODO: replace the "protected" page with the "home" page
-  //  which is different from the "/" landing page
-  return redirect('/protected')
+  return redirect('/home')
 }
