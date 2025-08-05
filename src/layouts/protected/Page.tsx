@@ -50,8 +50,10 @@ export const Page = () => {
       <SidebarInset>
         {/*Header of that page*/}
         <SiteHeaderWithContent data={data}/>
-        {/*Content of that page*/}
-        <Outlet/>
+        <div className="p-2 md:p-4">
+          {/*Content of that page*/}
+          <Outlet/>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )
