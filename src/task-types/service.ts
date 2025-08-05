@@ -88,17 +88,20 @@ const deleteTaskType = async (taskTypeId: number): Promise<TaskType> => {
 // Returns BoopSize and Tags[] objects, not just their IDs.
 const parseTaskTypeForm = async (formData: FormData) => {
   const taskTypeFormSchema = z.object({
-    "task-type-name": z.string(),
-    "boop-size-name": z.string(),
-    "tag-names": z.string(),
+    "taskTypeName": z.string(),
+    "boopSizeName": z.string(),
+    "tagNames": z.string(),
   })
 
-  const {data: parsedFormData, error} = taskTypeFormSchema.safeParse(formData);
-  if (error) throw error;
-
-  // const boopSizeNameValue = formData.get("boop-size-name")
-  // if (typeof boopSizeNameValue !== "string") throw new Error("boop-size must be a string");
-  const boopSizeNameValue = "small"
+  const {data: parsedFormData, error} = taskTypeFormSchema.safeParse({
+    "taskTypeName": formData.get("task-type-name"),
+    "boopSizeName": formData.get("boop-size-name"),
+    "tagNames": formData.get("tag-names"),
+  });
+  if (error) {
+    console.error("parseTaskTypeForm", error)
+    throw error;
+  }
 
   // Option A: JSON object
   // const tagNamesParsed = JSON.parse(tagsValue);
@@ -110,13 +113,13 @@ const parseTaskTypeForm = async (formData: FormData) => {
   // Option B: Comma-separated values
   // const tagNamesParsed = tagsValue.split(",").map(s => s.trim());
 
-  const tagNamesParsed = ["plants", "cleaning"]
+  const tagNamesList = parsedFormData.tagNames.split(",")
   // Allow these to throw errors if they happen
-  const boopSize = await getBoopSizeByName(boopSizeNameValue)
-  const tags = await Promise.all(tagNamesParsed.map((tagName) => {
+  const boopSize = await getBoopSizeByName(parsedFormData.boopSizeName)
+  const tags = await Promise.all(tagNamesList.map((tagName) => {
     return getTagByName(tagName)
   }))
   return {
-    name: parsedFormData["task-type-name"], boopSize, tags
+    name: parsedFormData.taskTypeName, boopSize, tags
   };
 }

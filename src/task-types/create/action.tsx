@@ -5,13 +5,21 @@ import {addTaskType, parseTaskTypeForm} from "@/task-types/service";
 
 export const action = async ({
                                request,
-                             }: ActionFunctionArgs): Promise<Response | { errors: unknown[] }> => {
+                             }: ActionFunctionArgs): Promise<Response | { error: string }> => {
   try {
     // validate and parse? using zod?
-    const parsedFormData = await parseTaskTypeForm(await request.formData());
+    const formData = await request.formData()
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    const parsedFormData = await parseTaskTypeForm(formData);
     const taskTypeId = await addTaskType(parsedFormData.name, parsedFormData.boopSize, parsedFormData.tags);
     return redirect(`/task-types/${taskTypeId}`);
   } catch (error) {
-    return {errors: [error]}
+    if (error instanceof Error) {
+      return {error: error.message};
+    } else {
+      return {error: 'An error occurred'}
+    }
   }
 }
