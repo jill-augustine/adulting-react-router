@@ -13,7 +13,7 @@ export const action = async ({
       console.log(key, value);
     }
     const parsedFormData = await parseTaskTypeForm(formData);
-    const taskTypeId = await addTaskType(parsedFormData.name, parsedFormData.boopSize, parsedFormData.tags);
+    const taskTypeId = await addTaskType(parsedFormData.name, parsedFormData.boopSizeId, parsedFormData.tagIds);
     return redirect(`/task-types/${taskTypeId}`);
   } catch (error) {
     if (error instanceof Error) {

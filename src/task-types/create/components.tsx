@@ -25,7 +25,7 @@ export const TaskTypeCreateCard = ({boopSizes, fetcher, loading, error}: TaskTyp
   if (boopSizes.length === 0) {
     throw new Error("No boop sizes found.");
   }
-  const [boopSizeName, setBoopSizeName] = useState(boopSizes[0].name);
+  const [boopSizeId, setBoopSizeId] = useState(boopSizes[0].id.toString());
   return (
     <div className="flex flex-col gap-y-2 md:gap-y-4 items-center">
       <Card className="w-full max-w-sm">
@@ -37,14 +37,6 @@ export const TaskTypeCreateCard = ({boopSizes, fetcher, loading, error}: TaskTyp
         </CardHeader>
         <CardContent>
           <fetcher.Form method="post">
-            {/*<div className="grid gap-2">*/}
-            {/*  <Input id="is-test-user" type="hidden" name="is-test-user"/>*/}
-            {/*</div>*/}
-            {/*<div className="flex flex-col gap-6">*/}
-            {/*  <Button type="submit" className="w-full" disabled={loading}>*/}
-            {/*    {loading ? 'Logging in as test user...' : 'Login as Test User'}*/}
-            {/*  </Button>*/}
-            {/*</div>*/}
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="task-type-name">Name</Label>
@@ -57,18 +49,16 @@ export const TaskTypeCreateCard = ({boopSizes, fetcher, loading, error}: TaskTyp
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="boop-size-name">Task Type Size</Label>
-                {/*Pass "boop-size" and "set-boop-size" as props?*/}
-                <BoopSizeSelector boopSizes={boopSizes} boopSizeName={boopSizeName}
-                                  setBoopSizeName={setBoopSizeName}></BoopSizeSelector>
-                <Input type="hidden" name="boop-size-name" value={boopSizeName}></Input>
+                <Label htmlFor="boop-size-id">Task Type Size</Label>
+                <BoopSizeSelector boopSizes={boopSizes} setBoopSizeId={setBoopSizeId}/>
+                <Input type="hidden" name="boop-size-id" value={boopSizeId}/>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="tag-names">Tags</Label>
+                <Label htmlFor="tag-ids">Tags</Label>
                 <Input
-                  id="tag-names"
+                  id="tag-ids"
                   type="text"
-                  name="tag-names"
+                  name="tag-ids"
                   placeholder="TODO: Make into multi-select with search?"
                 />
                 {error && <p className="text-sm text-red-500">{error}</p>}

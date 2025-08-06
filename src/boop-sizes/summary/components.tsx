@@ -45,18 +45,18 @@ const SummaryCard = ({boopSize}: { boopSize: BoopSize }) => {
 
 type BoopSizeSelectorProps = {
   boopSizes: BoopSize[];
-  boopSizeName: string;
-  setBoopSizeName: (value: string) => void;
+  setBoopSizeId: (value: string) => void;
 }
 
-export const BoopSizeSelectorRadio = ({boopSizes, boopSizeName, setBoopSizeName}: BoopSizeSelectorProps) => {
+export const BoopSizeSelectorRadio = ({boopSizes, setBoopSizeId,}: BoopSizeSelectorProps) => {
+  const defaultValue = boopSizes[0].id.toString()
   return (
-    <RadioGroup onValueChange={setBoopSizeName} value={boopSizeName}>
+    <RadioGroup onValueChange={setBoopSizeId} defaultValue={defaultValue}>
       {
         boopSizes.map((boopSize: BoopSize) => (
           <div className="flex items-center gap-3" key={boopSize.id}>
-            <RadioGroupItem key={boopSize.id} value={boopSize.name} id={`boop-size-${boopSize.name}`}/>
-            <Label htmlFor={`boop-size-${boopSize.name}`}>{boopSize.name}</Label>
+            <RadioGroupItem key={boopSize.id} value={`${boopSize.id}`} id={`boop-size-${boopSize.id}`}/>
+            <Label htmlFor={`boop-size-${boopSize.id}`}>{boopSize.name}</Label>
           </div>
         ))
       }

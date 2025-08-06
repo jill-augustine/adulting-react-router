@@ -1,6 +1,6 @@
 import * as z from 'zod';
-import {type BoopSize, boopSizeSelect, getBoopSizeByName} from "@/boop-sizes/service";
-import {tagsSelect, getTagByName, type Tag} from "@/tags/service"
+import {type BoopSize, boopSizeSelect,} from "@/boop-sizes/service";
+import {tagsSelect, parseTagIdsFromString} from "@/tags/service"
 import {browserClient as supabase} from "@/lib/client";
 
 export {
@@ -28,19 +28,23 @@ const taskTypeSelect = `
   tags(${tagsSelect})
 ` // not boop_size_id // not tag_id
 
-const addTaskType = async (name: string, boopSize: BoopSize, tags: Tag[] = []): Promise<number> => {
-  const tagIds: number[] = tags.map((tag) => tag.id)
-  // const {data: taskTypeId, error} = await supabase
-  //   .rpc('add_task_type', {name, boop_size_id: boopSize.id, tag_ids: tagIds})
-  //   .single()
-  //   .overrideTypes<number, { merge: false }>()
-  const error = new Error("some message")
-  const taskTypeId = null
-  if (error || taskTypeId === null) {
-    console.error("There is no task type")
+const addTaskType = async (name: string, boopSizeId: string, tagIds: string[] = []): Promise<number> => {
+  const taskData = {name, boop_size_id: Number(boopSizeId), tag_ids: tagIds.map(Number)}
+  console.log(taskData);
+  const {data: taskTypeId, error} = await supabase
+    .rpc('add_task_type', taskData)
+    .single()
+    .overrideTypes<number, { merge: false }>()
+  // const error = new Error("some message")
+  // const taskTypeId = null
+  if (error) {
+    console.error("Error creating task type");
     throw error;
   }
-  // TODO: Throw a different error if data is null
+  if (!taskTypeId) {
+    console.error("No error was thrown but no task type was returned.");
+    throw error;
+  }
   return taskTypeId;
 }
 
@@ -89,14 +93,14 @@ const deleteTaskType = async (taskTypeId: number): Promise<TaskType> => {
 const parseTaskTypeForm = async (formData: FormData) => {
   const taskTypeFormSchema = z.object({
     "taskTypeName": z.string(),
-    "boopSizeName": z.string(),
-    "tagNames": z.string(),
+    "boopSizeId": z.string(),
+    "tagIds": z.string().transform(parseTagIdsFromString),
   })
 
   const {data: parsedFormData, error} = taskTypeFormSchema.safeParse({
     "taskTypeName": formData.get("task-type-name"),
-    "boopSizeName": formData.get("boop-size-name"),
-    "tagNames": formData.get("tag-names"),
+    "boopSizeId": formData.get("boop-size-id"),
+    "tagIds": formData.get("tag-ids"),
   });
   if (error) {
     console.error("parseTaskTypeForm", error)
@@ -113,13 +117,9 @@ const parseTaskTypeForm = async (formData: FormData) => {
   // Option B: Comma-separated values
   // const tagNamesParsed = tagsValue.split(",").map(s => s.trim());
 
-  const tagNamesList = parsedFormData.tagNames.split(",")
-  // Allow these to throw errors if they happen
-  const boopSize = await getBoopSizeByName(parsedFormData.boopSizeName)
-  const tags = await Promise.all(tagNamesList.map((tagName) => {
-    return getTagByName(tagName)
-  }))
   return {
-    name: parsedFormData.taskTypeName, boopSize, tags
+    name: parsedFormData.taskTypeName,
+    boopSizeId: parsedFormData.boopSizeId,
+    tagIds: parsedFormData.tagIds,
   };
 }
