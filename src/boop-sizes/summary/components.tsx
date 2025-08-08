@@ -45,13 +45,13 @@ const SummaryCard = ({boopSize}: { boopSize: BoopSize }) => {
 
 type BoopSizeSelectorProps = {
   boopSizes: BoopSize[];
+  boopSizeId: string;
   setBoopSizeId: (value: string) => void;
 }
 
-export const BoopSizeSelectorRadio = ({boopSizes, setBoopSizeId,}: BoopSizeSelectorProps) => {
-  const defaultValue = boopSizes[0].id.toString()
+export const BoopSizeSelectorRadio = ({boopSizes, setBoopSizeId, boopSizeId}: BoopSizeSelectorProps) => {
   return (
-    <RadioGroup onValueChange={setBoopSizeId} defaultValue={defaultValue}>
+    <RadioGroup onValueChange={setBoopSizeId} defaultValue={boopSizeId}>
       {
         boopSizes.map((boopSize: BoopSize) => (
           <div className="flex items-center gap-3" key={boopSize.id}>

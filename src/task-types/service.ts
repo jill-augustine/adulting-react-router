@@ -1,15 +1,15 @@
 import * as z from 'zod';
 import {type BoopSize, boopSizeSelect,} from "@/boop-sizes/service";
-import {tagsSelect, parseTagIdsFromString} from "@/tags/service"
+import {tagsSelect, parseTagIdsFromString, type Tag} from "@/tags/service"
 import {browserClient as supabase} from "@/lib/client";
 
 export {
   type TaskType,
   taskTypeSelect,
   createTaskType,
+  updateTaskType,
   getTaskType,
   getAllTaskTypes,
-  updateTaskType,
   deleteTaskType,
   parseCreateTaskTypeForm,
 };
@@ -46,6 +46,29 @@ const createTaskType = async (name: string, boopSizeId: string, tagIds: string[]
   return taskTypeId;
 }
 
+const updateTaskType = async (id: string, name: string, boopSizeId: string, tagIds: string[] = []): Promise<number> => {
+  const taskData = {
+    id: Number(id),
+    name,
+    boop_size_id: Number(boopSizeId),
+    tag_ids: tagIds.map(Number)
+  }
+  console.log(taskData);
+  const {data: taskTypeId, error} = await supabase
+    .rpc('update_task_type', taskData)
+    .single()
+    .overrideTypes<number, { merge: false }>()
+  if (error) {
+    console.error("Error updating task type");
+    throw error;
+  }
+  if (!taskTypeId) {
+    console.error("No error was thrown but no task type was returned.");
+    throw error;
+  }
+  return taskTypeId;
+}
+
 const getTaskType = async (taskTypeId: number): Promise<TaskType> => {
   const {data, error} = await supabase
     .from("task_types")
@@ -63,17 +86,6 @@ const getAllTaskTypes = async (): Promise<TaskType[]> => {
     .overrideTypes<TaskType[], { merge: false }>()
   if (error) throw error;
   return data
-}
-
-// Add tags in tags.ts because updating tags doesn't show what should be added or removed.
-const updateTaskType = async (name: string, boopSize: BoopSize): Promise<TaskType> => {
-  const {data, error} = await supabase
-    .from("task_types")
-    .update({name, boop_size: boopSize})
-    .select(taskTypeSelect)
-    .overrideTypes<TaskType[], { merge: false }>()
-  if (error) throw error;
-  return data[0]
 }
 
 const deleteTaskType = async (taskTypeId: number): Promise<TaskType> => {
@@ -104,6 +116,29 @@ const parseCreateTaskTypeForm = async (formData: FormData) => {
     throw error;
   }
   return {
+    name: parsedFormData.taskTypeName,
+    boopSizeId: parsedFormData.boopSizeId,
+    tagIds: parsedFormData.tagIds,
+  };
+}
+
+export const parseEditTaskTypeForm = async (formData: FormData) => {
+  const editTaskTypeFormSchema = createTaskTypeFormSchema.extend(
+    {id: z.string()}
+  )
+
+  const {data: parsedFormData, error} = editTaskTypeFormSchema.safeParse({
+    id: formData.get("task-type-id"),
+    taskTypeName: formData.get("task-type-name"),
+    boopSizeId: formData.get("boop-size-id"),
+    tagIds: formData.get("tag-ids"),
+  });
+  if (error) {
+    console.error("parseEditTaskTypeForm", error)
+    throw error;
+  }
+  return {
+    id: parsedFormData.id,
     name: parsedFormData.taskTypeName,
     boopSizeId: parsedFormData.boopSizeId,
     tagIds: parsedFormData.tagIds,
