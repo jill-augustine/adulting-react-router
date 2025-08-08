@@ -1,6 +1,6 @@
 create or replace function add_task_type(name text, boop_size_id int8, tag_ids int8[])
     returns int8
-    language plpgsql
+    language 'plpgsql'
     set search_path = pg_catalog, public
 as
 $$

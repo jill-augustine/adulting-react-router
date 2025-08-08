@@ -4,7 +4,7 @@ create or replace function update_task_type(
     boop_size_id int8,
     tag_ids int8[]
 ) returns int8
-    language plpgsql
+    language 'plpgsql'
     set search_path = pg_catalog, public
 as
 $$
@@ -18,7 +18,7 @@ begin
     -- Delete existing tag associations
     delete
     from join_task_types_tags
-    where join_task_types_tags.task_type_id = task_type_id;
+    where join_task_types_tags.task_type_id = update_task_type.id;
 
     -- Insert new tag associations if provided
     if array_length(tag_ids, 1) > 0 then
