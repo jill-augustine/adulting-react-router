@@ -1,8 +1,14 @@
 import {useLoaderData} from "react-router";
 import {type TaskType} from "../service";
-import {TaskTypeSummaryCard} from "@/task-types/summary/components"
+import {PageHeader, TaskTypeSummaryCard} from "@/task-types/summary/components"
+import * as React from "react";
 
 export const Page = () => {
   const {data} = useLoaderData();
-  return data.map((taskType: TaskType) => <TaskTypeSummaryCard taskType={taskType}/>)
+  return (
+    <div>
+      <PageHeader/>
+      {data.map((taskType: TaskType) => <TaskTypeSummaryCard taskType={taskType}/>)}
+    </div>
+  )
 }

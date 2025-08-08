@@ -1,6 +1,7 @@
 create or replace function add_task_type(name text, boop_size_id int8, tag_ids int8[])
     returns int8
-    language plpgsql
+    language 'plpgsql'
+    set search_path = pg_catalog, public
 as
 $$
 declare
@@ -11,9 +12,11 @@ begin
     values (name, boop_size_id)
     returning id into task_type_id;
 
-    insert into join_task_types_tags(task_type_id, tag_id)
-    select task_type_id, tag_id
-    from unnest(tag_ids) as tag_id;
+    if array_length(tag_ids, 1) > 0 then
+        insert into join_task_types_tags(task_type_id, tag_id)
+        select task_type_id, tag_id
+        from unnest(tag_ids) as tag_id;
+    end if;
 
     return task_type_id;
 exception

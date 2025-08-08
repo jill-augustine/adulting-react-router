@@ -83,6 +83,13 @@ const deleteTagById = async (tagId: number): Promise<Tag> => {
   return data[0]
 }
 
+export const parseTagIdsFromString = (tagString: string) => {
+  if (!tagString) {
+    return []
+  }
+  return tagString.split(',')
+}
+
 export {
   type Tag,
   tagsSelect,

@@ -1,24 +1,24 @@
 import * as z from 'zod';
-import {type BoopSize, boopSizeSelect, getBoopSizeByName} from "@/boop-sizes/service";
-import {tagsSelect, getTagByName, type Tag} from "@/tags/service"
+import {type BoopSize, boopSizeSelect,} from "@/boop-sizes/service";
+import {tagsSelect, parseTagIdsFromString, type Tag} from "@/tags/service"
 import {browserClient as supabase} from "@/lib/client";
 
 export {
   type TaskType,
   taskTypeSelect,
-  addTaskType,
+  createTaskType,
+  updateTaskType,
   getTaskType,
   getAllTaskTypes,
-  updateTaskType,
   deleteTaskType,
-  parseTaskTypeForm,
+  parseCreateTaskTypeForm,
 };
 
 type TaskType = {
   id: number;
   boopSize: BoopSize
   name: string;
-  tags: string[];
+  tags: Tag[];
 }
 
 const taskTypeSelect = `
@@ -26,21 +26,46 @@ const taskTypeSelect = `
   name,
   boopSize:boop_sizes(${boopSizeSelect}),
   tags(${tagsSelect})
-` // not boop_size_id // not tag_id
+`
 
-const addTaskType = async (name: string, boopSize: BoopSize, tags: Tag[] = []): Promise<number> => {
-  const tagIds: number[] = tags.map((tag) => tag.id)
-  // const {data: taskTypeId, error} = await supabase
-  //   .rpc('add_task_type', {name, boop_size_id: boopSize.id, tag_ids: tagIds})
-  //   .single()
-  //   .overrideTypes<number, { merge: false }>()
-  const error = new Error("some message")
-  const taskTypeId = null
-  if (error || taskTypeId === null) {
-    console.error("There is no task type")
+const createTaskType = async (name: string, boopSizeId: string, tagIds: string[] = []): Promise<number> => {
+  const taskData = {name, boop_size_id: Number(boopSizeId), tag_ids: tagIds.map(Number)}
+  console.log(taskData);
+  const {data: taskTypeId, error} = await supabase
+    .rpc('add_task_type', taskData)
+    .single()
+    .overrideTypes<number, { merge: false }>()
+  if (error) {
+    console.error("Error creating task type");
     throw error;
   }
-  // TODO: Throw a different error if data is null
+  if (!taskTypeId) {
+    console.error("No error was thrown but no task type was returned.");
+    throw error;
+  }
+  return taskTypeId;
+}
+
+const updateTaskType = async (id: string, name: string, boopSizeId: string, tagIds: string[] = []): Promise<number> => {
+  const taskData = {
+    id: Number(id),
+    name,
+    boop_size_id: Number(boopSizeId),
+    tag_ids: tagIds.map(Number)
+  }
+  console.log(taskData);
+  const {data: taskTypeId, error} = await supabase
+    .rpc('update_task_type', taskData)
+    .single()
+    .overrideTypes<number, { merge: false }>()
+  if (error) {
+    console.error("Error updating task type");
+    throw error;
+  }
+  if (!taskTypeId) {
+    console.error("No error was thrown but no task type was returned.");
+    throw error;
+  }
   return taskTypeId;
 }
 
@@ -63,17 +88,6 @@ const getAllTaskTypes = async (): Promise<TaskType[]> => {
   return data
 }
 
-// Add tags in tags.ts because updating tags doesn't show what should be added or removed.
-const updateTaskType = async (name: string, boopSize: BoopSize): Promise<TaskType> => {
-  const {data, error} = await supabase
-    .from("task_types")
-    .update({name, boop_size: boopSize})
-    .select(taskTypeSelect)
-    .overrideTypes<TaskType[], { merge: false }>()
-  if (error) throw error;
-  return data[0]
-}
-
 const deleteTaskType = async (taskTypeId: number): Promise<TaskType> => {
   const {data, error} = await supabase
     .from("task_types")
@@ -84,39 +98,49 @@ const deleteTaskType = async (taskTypeId: number): Promise<TaskType> => {
   if (error) throw error;
   return data[0]
 }
+const createTaskTypeFormSchema = z.object({
+  "taskTypeName": z.string(),
+  "boopSizeId": z.string(),
+  "tagIds": z.string().transform(parseTagIdsFromString),
+})
 
-// Returns BoopSize and Tags[] objects, not just their IDs.
-const parseTaskTypeForm = async (formData: FormData) => {
-  const taskTypeFormSchema = z.object({
-    "task-type-name": z.string(),
-    "boop-size-name": z.string(),
-    "tag-names": z.string(),
-  })
-
-  const {data: parsedFormData, error} = taskTypeFormSchema.safeParse(formData);
-  if (error) throw error;
-
-  // const boopSizeNameValue = formData.get("boop-size-name")
-  // if (typeof boopSizeNameValue !== "string") throw new Error("boop-size must be a string");
-  const boopSizeNameValue = "small"
-
-  // Option A: JSON object
-  // const tagNamesParsed = JSON.parse(tagsValue);
-  // if (!(tagNamesParsed instanceof Array) ||
-  //   tagNamesParsed.some((t) => typeof t !== "string")
-  // ) {
-  //   throw new Error("tag-names must be an array of strings");
-  // }
-  // Option B: Comma-separated values
-  // const tagNamesParsed = tagsValue.split(",").map(s => s.trim());
-
-  const tagNamesParsed = ["plants", "cleaning"]
-  // Allow these to throw errors if they happen
-  const boopSize = await getBoopSizeByName(boopSizeNameValue)
-  const tags = await Promise.all(tagNamesParsed.map((tagName) => {
-    return getTagByName(tagName)
-  }))
+// Returns the IDs of the boop size and tags, instead of the whole object.
+const parseCreateTaskTypeForm = async (formData: FormData) => {
+  const {data: parsedFormData, error} = createTaskTypeFormSchema.safeParse({
+    taskTypeName: formData.get("task-type-name"),
+    boopSizeId: formData.get("boop-size-id"),
+    tagIds: formData.get("tag-ids"),
+  });
+  if (error) {
+    console.error("parseCreateTaskTypeForm", error)
+    throw error;
+  }
   return {
-    name: parsedFormData["task-type-name"], boopSize, tags
+    name: parsedFormData.taskTypeName,
+    boopSizeId: parsedFormData.boopSizeId,
+    tagIds: parsedFormData.tagIds,
+  };
+}
+
+export const parseEditTaskTypeForm = async (formData: FormData) => {
+  const editTaskTypeFormSchema = createTaskTypeFormSchema.extend(
+    {id: z.string()}
+  )
+
+  const {data: parsedFormData, error} = editTaskTypeFormSchema.safeParse({
+    id: formData.get("task-type-id"),
+    taskTypeName: formData.get("task-type-name"),
+    boopSizeId: formData.get("boop-size-id"),
+    tagIds: formData.get("tag-ids"),
+  });
+  if (error) {
+    console.error("parseEditTaskTypeForm", error)
+    throw error;
+  }
+  return {
+    id: parsedFormData.id,
+    name: parsedFormData.taskTypeName,
+    boopSizeId: parsedFormData.boopSizeId,
+    tagIds: parsedFormData.tagIds,
   };
 }
