@@ -4,7 +4,6 @@ import {
   CardTitle,
   CardHeader,
   CardFooter,
-  CardDescription,
   CardContent
 } from "@/components/ui/card.tsx";
 import {Button} from "@/components/ui/button.tsx";

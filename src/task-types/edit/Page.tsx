@@ -1,5 +1,5 @@
 import {EditTaskTypeCard} from "@/task-types/edit/components";
-import {data, useFetcher, useLoaderData} from "react-router";
+import {useFetcher, useLoaderData} from "react-router";
 import {action} from "@/task-types/create/action";
 import type {TaskType} from "@/task-types/service.ts";
 import type {BoopSize} from "@/boop-sizes/service.ts";
