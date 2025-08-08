@@ -21,7 +21,7 @@ type TaskTypeCreateCardProps = {
   boopSizes: BoopSize[];
 }
 
-export const TaskTypeCreateCard = ({boopSizes, fetcher, loading, error}: TaskTypeCreateCardProps) => {
+export const CreateTaskTypeCard = ({boopSizes, fetcher, loading, error}: TaskTypeCreateCardProps) => {
   if (boopSizes.length === 0) {
     throw new Error("No boop sizes found.");
   }
@@ -50,7 +50,7 @@ export const TaskTypeCreateCard = ({boopSizes, fetcher, loading, error}: TaskTyp
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="boop-size-id">Task Type Size</Label>
-                <BoopSizeSelector boopSizes={boopSizes} setBoopSizeId={setBoopSizeId}/>
+                <BoopSizeSelector boopSizes={boopSizes} setBoopSizeId={setBoopSizeId} boopSizeId={boopSizeId}/>
                 <Input type="hidden" name="boop-size-id" value={boopSizeId}/>
               </div>
               <div className="grid gap-2">

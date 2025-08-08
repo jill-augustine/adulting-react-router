@@ -11,7 +11,7 @@ export const TaskTypeDetailsCard = ({taskType}: { taskType: TaskType }) => {
       <CardContent>
         <CardTitle>#{taskType.id} {taskType.name}</CardTitle>
         <CardDescription>
-          {JSON.stringify(taskType.boopSize)}<br/><br/>
+          Size: {JSON.stringify(taskType.boopSize)}<br/><br/>
         </CardDescription>
       </CardContent>
       {/*<CardFooter>*/}
