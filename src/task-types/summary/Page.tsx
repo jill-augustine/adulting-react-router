@@ -8,7 +8,9 @@ export const Page = () => {
   return (
     <div>
       <PageHeader/>
-      {data.map((taskType: TaskType) => <TaskTypeSummaryCard taskType={taskType}/>)}
+      <div className="flex flex-col gap-4">
+        {data.map((taskType: TaskType) => <TaskTypeSummaryCard taskType={taskType}/>)}
+      </div>
     </div>
   )
 }

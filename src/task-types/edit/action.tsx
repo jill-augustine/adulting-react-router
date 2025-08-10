@@ -12,8 +12,9 @@ export const action = async ({
       console.log(key, value);
     }
     // UI uses "edit" because it matches the route of the page whereas database uses CRUD
-    const parsedFormData = await parseEditTaskTypeForm(formData);
-    const taskTypeId = await updateTaskType(parsedFormData.id, parsedFormData.name, parsedFormData.boopSizeId, parsedFormData.tagIds);
+    const parsedFormData = parseEditTaskTypeForm(formData);
+    const taskTypeId = await updateTaskType(parsedFormData.id, parsedFormData.name, parsedFormData.boopSizeId, parsedFormData.frequency,
+      parsedFormData.tagIds);
     // TODO: Some kind of pop-up showing success
     return redirect(`/task-types/${taskTypeId}`);
   } catch (error) {

@@ -13,6 +13,8 @@ import {BoopSizeSelectorRadio as BoopSizeSelector} from "@/boop-sizes/summary/co
 import type {BoopSize} from "@/boop-sizes/service.ts";
 import {useState} from "react";
 import type {TaskType} from "@/task-types/service.ts";
+import * as React from "react";
+import {FrequencySelector} from "@/task-types/create/components.tsx";
 
 type TaskTypeCreateCardProps = {
   taskType: TaskType;
@@ -30,11 +32,11 @@ export const EditTaskTypeCard = ({taskType, boopSizes, fetcher, loading, error}:
   return (
     <div className="flex flex-col gap-y-2 md:gap-y-4 items-center">
       <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Edit task type</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <fetcher.Form method="post">
+        <fetcher.Form method="post">
+          <CardHeader>
+            <CardTitle>Edit task type</CardTitle>
+          </CardHeader>
+          <CardContent>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="task-type-id">ID</Label>
@@ -61,6 +63,9 @@ export const EditTaskTypeCard = ({taskType, boopSizes, fetcher, loading, error}:
                   <BoopSizeSelector boopSizes={boopSizes} setBoopSizeId={setBoopSizeId} boopSizeId={boopSizeId}/>
                   <Input type="hidden" name="boop-size-id" defaultValue={boopSizeId}/>
                 </div>
+                <div className="grid gap-2">
+                  <FrequencySelector/>
+                </div>
                 {/*TODO: Change this to a different type of input, e.g. drop-down or something else.*/}
                 <div className="grid gap-2">
                   <Label htmlFor="tag-ids">Tags</Label>
@@ -69,23 +74,20 @@ export const EditTaskTypeCard = ({taskType, boopSizes, fetcher, loading, error}:
                     type="text"
                     name="tag-ids"
                     defaultValue={taskType.tags.map((tag) => {
-                      tag.name
+                      return tag.name
                     }).join(",")}
                   />
                   {error && <p className="text-sm text-red-500">{error}</p>}
                 </div>
-                <Button type="submit" className="w-full" variant="outline" disabled={loading}>
-                  {loading ? "Saving..." : "Save"}
-                </Button>
               </div>
             </div>
-          </fetcher.Form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full" variant="outline">
-            Submit
-          </Button>
-        </CardFooter>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <Button type="submit" className="w-full" variant="outline" disabled={loading}>
+              {loading ? "Saving..." : "Save"}
+            </Button>
+          </CardFooter>
+        </fetcher.Form>
       </Card>
     </div>
   );

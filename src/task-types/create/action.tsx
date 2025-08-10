@@ -11,7 +11,7 @@ export const action = async ({
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
-    const parsedFormData = await parseCreateTaskTypeForm(formData);
+    const parsedFormData = parseCreateTaskTypeForm(formData);
     const taskTypeId = await createTaskType(
       parsedFormData.name,
       parsedFormData.boopSizeId,

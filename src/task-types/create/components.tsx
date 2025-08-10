@@ -81,20 +81,20 @@ export const CreateTaskTypeCard = ({boopSizes, fetcher, loading, error}: TaskTyp
   );
 }
 
-const FrequencySelector = () => {
+export const FrequencySelector = () => {
   return (
     <>
       <Label htmlFor="frequency-selector">Repeats every...</Label>
       <div className="flex flex-row gap-4" id="frequency-selector">
         <div className="grid gap-2 w-12">
-          <Input type="number" min="0" defaultValue="0" id="frequency-months" name="frequency-months"/>
+          <Input type="number" min="0" defaultValue="0" id="frequency-months" name="frequency-months" required/>
           <Label htmlFor="frequency-months" className="font-normal">Months</Label></div>
         <div className="grid gap-2 w-12">
-          <Input type="number" min="0" defaultValue="0" id="frequency-weeks" name="frequency-weeks"/>
+          <Input type="number" min="0" defaultValue="0" id="frequency-weeks" name="frequency-weeks" required/>
           <Label htmlFor="frequency-days" className="font-normal">Weeks</Label>
         </div>
         <div className="grid gap-2 w-12">
-          <Input type="number" min="0" defaultValue="0" id="frequency-days" name="frequency-days"/>
+          <Input type="number" min="0" defaultValue="0" id="frequency-days" name="frequency-days" required/>
           <Label htmlFor="frequency-days" className="font-normal">Days</Label>
         </div>
       </div>
