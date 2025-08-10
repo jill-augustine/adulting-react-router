@@ -1,4 +1,4 @@
-create or replace function add_task_type(name text, boop_size_id int8, tag_ids int8[])
+create or replace function add_task_type(name text, boop_size_id int8, frequency text, tag_ids int8[])
     returns int8
     language 'plpgsql'
     set search_path = pg_catalog, public
@@ -8,8 +8,8 @@ declare
     task_type_id int8;
 begin
     -- Start of transaction
-    insert into task_types(name, boop_size_id)
-    values (name, boop_size_id)
+    insert into task_types(name, boop_size_id, frequency)
+    values (name, boop_size_id, frequency)
     returning id into task_type_id;
 
     if array_length(tag_ids, 1) > 0 then

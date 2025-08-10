@@ -13,6 +13,7 @@ import {Input} from "@/components/ui/input.tsx";
 import {BoopSizeSelectorRadio as BoopSizeSelector} from "@/boop-sizes/summary/components"
 import type {BoopSize} from "@/boop-sizes/service.ts";
 import {useState} from "react";
+import * as React from "react";
 
 type TaskTypeCreateCardProps = {
   error?: string;
@@ -29,14 +30,14 @@ export const CreateTaskTypeCard = ({boopSizes, fetcher, loading, error}: TaskTyp
   return (
     <div className="flex flex-col gap-y-2 md:gap-y-4 items-center">
       <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Create a new task type</CardTitle>
-          <CardDescription>
-            You can add this task type to chores later.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <fetcher.Form method="post">
+        <fetcher.Form method="post" className="flex flex-col gap-4">
+          <CardHeader>
+            <CardTitle>Create a new task type</CardTitle>
+            <CardDescription>
+              You can add this task type to chores later.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="task-type-name">Name</Label>
@@ -54,6 +55,9 @@ export const CreateTaskTypeCard = ({boopSizes, fetcher, loading, error}: TaskTyp
                 <Input type="hidden" name="boop-size-id" value={boopSizeId}/>
               </div>
               <div className="grid gap-2">
+                <FrequencySelector/>
+              </div>
+              <div className="grid gap-2">
                 <Label htmlFor="tag-ids">Tags</Label>
                 <Input
                   id="tag-ids"
@@ -63,19 +67,37 @@ export const CreateTaskTypeCard = ({boopSizes, fetcher, loading, error}: TaskTyp
                 />
                 {error && <p className="text-sm text-red-500">{error}</p>}
               </div>
-              <Button type="submit" className="w-full" variant="outline" disabled={loading}>
-                {loading ? "Creating..." : "Create"}
-              </Button>
             </div>
-          </fetcher.Form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full" variant="outline">
-            Submit
-          </Button>
-        </CardFooter>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <Button type="submit" className="w-full" variant="outline" disabled={loading}>
+              {loading ? "Creating..." : "Create"}
+            </Button>
+          </CardFooter>
+        </fetcher.Form>
       </Card>
       <h1 className="text-3xl">Add a "add to chore" button on the task type details page</h1>
     </div>
   );
+}
+
+const FrequencySelector = () => {
+  return (
+    <>
+      <Label htmlFor="frequency-selector">Repeats every...</Label>
+      <div className="flex flex-row gap-4" id="frequency-selector">
+        <div className="grid gap-2 w-12">
+          <Input type="number" min="0" defaultValue="0" id="frequency-months" name="frequency-months"/>
+          <Label htmlFor="frequency-months" className="font-normal">Months</Label></div>
+        <div className="grid gap-2 w-12">
+          <Input type="number" min="0" defaultValue="0" id="frequency-weeks" name="frequency-weeks"/>
+          <Label htmlFor="frequency-days" className="font-normal">Weeks</Label>
+        </div>
+        <div className="grid gap-2 w-12">
+          <Input type="number" min="0" defaultValue="0" id="frequency-days" name="frequency-days"/>
+          <Label htmlFor="frequency-days" className="font-normal">Days</Label>
+        </div>
+      </div>
+    </>
+  )
 }
