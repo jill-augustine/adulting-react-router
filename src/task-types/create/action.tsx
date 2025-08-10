@@ -11,8 +11,13 @@ export const action = async ({
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
-    const parsedFormData = await parseCreateTaskTypeForm(formData);
-    const taskTypeId = await createTaskType(parsedFormData.name, parsedFormData.boopSizeId, parsedFormData.tagIds);
+    const parsedFormData = parseCreateTaskTypeForm(formData);
+    const taskTypeId = await createTaskType(
+      parsedFormData.name,
+      parsedFormData.boopSizeId,
+      parsedFormData.frequency,
+      parsedFormData.tagIds,
+    );
     return redirect(`/task-types/${taskTypeId}`);
   } catch (error) {
     if (error instanceof Error) {

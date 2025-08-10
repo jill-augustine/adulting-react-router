@@ -4,7 +4,8 @@ create TABLE task_types
     id           BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name         TEXT UNIQUE NOT NULL,
     boop_size_id INT         NOT NULL REFERENCES boop_sizes (id),
-    user_id      UUID DEFAULT (auth.uid()) REFERENCES auth.users (id) ON DELETE CASCADE
+    user_id      UUID DEFAULT (auth.uid()) REFERENCES auth.users (id) ON DELETE CASCADE,
+    frequency    TEXT        NOT NULL
 );
 
 -- Create Join table (many:many) between chores and task types
