@@ -5,7 +5,7 @@ import {getAllBoopSizes} from "@/boop-sizes/service.ts";
 export const loader = async ({params}: LoaderFunctionArgs) => {
   return {
     data: {
-      taskType: await getTaskType(Number(params.taskTypeId)),
+      taskType: await getTaskType(parseInt(params.taskTypeId ?? "")),
       boopSizes: await getAllBoopSizes(),
     }
   };

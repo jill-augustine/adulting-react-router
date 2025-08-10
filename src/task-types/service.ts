@@ -48,10 +48,10 @@ const createTaskType = async (name: string, boopSizeId: string, tagIds: string[]
 
 const updateTaskType = async (id: string, name: string, boopSizeId: string, tagIds: string[] = []): Promise<number> => {
   const taskData = {
-    id: Number(id),
+    id: parseInt(id),
     name,
-    boop_size_id: Number(boopSizeId),
-    tag_ids: tagIds.map(Number)
+    boop_size_id: parseInt(boopSizeId),
+    tag_ids: tagIds.map(parseInt)
   }
   console.log(taskData);
   const {data: taskTypeId, error} = await supabase
