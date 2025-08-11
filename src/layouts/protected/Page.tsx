@@ -28,10 +28,10 @@ export const navData = {
       url: "/task-types",
     },
     // Some separator
-    {
-      title: "Tags",
-      url: "/tags",
-    },
+    // {
+    //   title: "Tags",
+    //   url: "/tags",
+    // },
     {
       title: "Tasks",
       url: "/tasks",

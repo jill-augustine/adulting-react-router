@@ -1,6 +1,6 @@
 import * as z from 'zod';
 import {type BoopSize, boopSizeSelect,} from "@/boop-sizes/service";
-import {tagsSelect, parseTagIdsFromString, type Tag} from "@/tags/service"
+// import {tagsSelect, parseTagIdsFromString, type Tag} from "@/tags/service"
 import {browserClient as supabase} from "@/lib/client";
 import {Duration} from "luxon";
 
@@ -20,16 +20,17 @@ type TaskType = {
   boopSize: BoopSize
   name: string;
   frequency: string;
-  tags: Tag[];
+  // tags: Tag[];
 }
 
 const taskTypeSelect = `
   id,
   name,
   frequency,
-  boopSize:boop_sizes(${boopSizeSelect}),
-  tags(${tagsSelect})
-`
+  boopSize:boop_sizes(${boopSizeSelect})
+  `
+// tags(${tagsSelect})
+// `
 
 const parseFrequency = (formData: FormData) => {
   const frequencySchema = z.object(
@@ -79,7 +80,7 @@ const parseFrequency = (formData: FormData) => {
 const createTaskTypeFormSchema = z.object({
   taskTypeName: z.string(),
   boopSizeId: z.string(),
-  tagIds: z.string().transform(parseTagIdsFromString),
+  // tagIds: z.string().transform(parseTagIdsFromString),
   frequency: z.string(),
 })
 
@@ -91,6 +92,7 @@ const parseCreateTaskTypeForm = (formData: FormData) => {
   }
   console.log("Parsed Frequency: ", parsedFrequency)
   const {data: parsedFormData, error} = createTaskTypeFormSchema.safeParse({
+    id: formData.get("task-type-id"),
     taskTypeName: formData.get("task-type-name"),
     boopSizeId: formData.get("boop-size-id"),
     tagIds: formData.get("tag-ids"),
@@ -104,7 +106,7 @@ const parseCreateTaskTypeForm = (formData: FormData) => {
   return {
     name: parsedFormData.taskTypeName,
     boopSizeId: parsedFormData.boopSizeId,
-    tagIds: parsedFormData.tagIds,
+    // tagIds: parsedFormData.tagIds,
     frequency: parsedFormData.frequency,
   };
 }
@@ -121,7 +123,7 @@ export const parseEditTaskTypeForm = (formData: FormData) => {
     id: formData.get("task-type-id"),
     taskTypeName: formData.get("task-type-name"),
     boopSizeId: formData.get("boop-size-id"),
-    tagIds: formData.get("tag-ids"),
+    // tagIds: formData.get("tag-ids"),
     frequency: parsedFrequency,
   });
   if (error) {
@@ -132,7 +134,7 @@ export const parseEditTaskTypeForm = (formData: FormData) => {
     id: parsedFormData.id,
     name: parsedFormData.taskTypeName,
     boopSizeId: parsedFormData.boopSizeId,
-    tagIds: parsedFormData.tagIds,
+    // tagIds: parsedFormData.tagIds,
     frequency: parsedFormData.frequency
   };
 }

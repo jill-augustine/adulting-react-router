@@ -12,7 +12,6 @@ import {Duration} from "luxon";
 
 export const TaskTypeDetailsCard = ({taskType}: { taskType: TaskType }) => {
   const frequency = Duration.fromISO(taskType.frequency).removeZeros()
-  console.log(frequency)
   return (
     <Card key={taskType.id}>
       <CardHeader>

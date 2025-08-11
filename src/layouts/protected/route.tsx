@@ -5,7 +5,7 @@ import updatePasswordRoute from "@/update-password/route.tsx";
 import choresRoute from "@/chores/route.tsx";
 import taskTypesRoute from "@/task-types/route.tsx";
 import boopSizesRoute from "@/boop-sizes/route.tsx";
-import tagsRoute from "@/tags/route.tsx";
+// import tagsRoute from "@/tags/route.tsx";
 import homeRoute from "@/home/route.tsx";
 import {Page} from "@/layouts/protected/Page.tsx";
 import {loader} from "@/layouts/protected/loader";
@@ -17,7 +17,7 @@ const protectedRoutes: RouteObject[] = [
   choresRoute,
   taskTypesRoute,
   boopSizesRoute,
-  tagsRoute,
+  // tagsRoute,
 ]
 
 export const protectedLayoutRoute: RouteObject = {

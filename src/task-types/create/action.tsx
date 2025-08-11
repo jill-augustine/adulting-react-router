@@ -8,15 +8,12 @@ export const action = async ({
                              }: ActionFunctionArgs): Promise<Response | { error: string }> => {
   try {
     const formData = await request.formData()
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
     const parsedFormData = parseCreateTaskTypeForm(formData);
     const taskTypeId = await createTaskType(
       parsedFormData.name,
       parsedFormData.boopSizeId,
       parsedFormData.frequency,
-      parsedFormData.tagIds,
+      // parsedFormData.tagIds,
     );
     return redirect(`/task-types/${taskTypeId}`);
   } catch (error) {
