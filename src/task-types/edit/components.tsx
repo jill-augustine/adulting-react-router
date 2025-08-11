@@ -32,7 +32,7 @@ export const EditTaskTypeCard = ({taskType, boopSizes, fetcher, loading, error}:
   return (
     <div className="flex flex-col gap-y-2 md:gap-y-4 items-center">
       <Card className="w-full max-w-sm">
-        <fetcher.Form method="post">
+        <fetcher.Form method="post" className="flex flex-col gap-4">
           <CardHeader>
             <CardTitle>Edit task type</CardTitle>
           </CardHeader>
@@ -46,6 +46,7 @@ export const EditTaskTypeCard = ({taskType, boopSizes, fetcher, loading, error}:
                   type="text"
                   value={taskType.id.toString()}
                   readOnly={true}
+                  className="read-only:bg-gray-100"
                 />
               </div>
               <div className="flex flex-col gap-6">
@@ -64,7 +65,7 @@ export const EditTaskTypeCard = ({taskType, boopSizes, fetcher, loading, error}:
                   <Input type="hidden" name="boop-size-id" defaultValue={boopSizeId}/>
                 </div>
                 <div className="grid gap-2">
-                  <FrequencySelector/>
+                  <FrequencySelector taskType={taskType}/>
                 </div>
                 {/*TODO: Change this to a different type of input, e.g. drop-down or something else.*/}
                 <div className="grid gap-2">
