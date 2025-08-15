@@ -48,11 +48,13 @@ export const Page = () => {
     <SidebarProvider>
       <AppSidebar navMain={navData.navMain} version={navData.versions.pop() ?? ""}/>
       <SidebarInset>
-        {/*Header of that page*/}
+        {/*Header of that page spanning whole width*/}
         <SiteHeaderWithContent data={data}/>
-        <div className="p-2 md:p-4">
-          {/*Content of that page*/}
-          <Outlet/>
+        <div className="flex flex-col w-full items-center justify-center p-2 md:p-4">
+          {/*Content of that page limited to width small->large*/}
+          <div className="min-w-sm max-w-xl">
+            <Outlet/>
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
