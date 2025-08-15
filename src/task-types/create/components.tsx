@@ -14,6 +14,8 @@ import {BoopSizeSelectorRadio as BoopSizeSelector} from "@/boop-sizes/summary/co
 import type {BoopSize} from "@/boop-sizes/service.ts";
 import {useState} from "react";
 import * as React from "react";
+import type {TaskType} from "@/task-types/service.ts";
+import {Duration} from "luxon";
 
 type TaskTypeCreateCardProps = {
   error?: string;
@@ -57,16 +59,16 @@ export const CreateTaskTypeCard = ({boopSizes, fetcher, loading, error}: TaskTyp
               <div className="grid gap-2">
                 <FrequencySelector/>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="tag-ids">Tags</Label>
-                <Input
-                  id="tag-ids"
-                  type="text"
-                  name="tag-ids"
-                  placeholder="TODO: Make into multi-select with search?"
-                />
-                {error && <p className="text-sm text-red-500">{error}</p>}
-              </div>
+              {/*<div className="grid gap-2">*/}
+              {/*  <Label htmlFor="tag-ids">Tags</Label>*/}
+              {/*  <Input*/}
+              {/*    id="tag-ids"*/}
+              {/*    type="text"*/}
+              {/*    name="tag-ids"*/}
+              {/*    placeholder="TODO: Make into multi-select with search?"*/}
+              {/*  />*/}
+              {/*  {error && <p className="text-sm text-red-500">{error}</p>}*/}
+              {/*</div>*/}
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2">
@@ -81,20 +83,27 @@ export const CreateTaskTypeCard = ({boopSizes, fetcher, loading, error}: TaskTyp
   );
 }
 
-export const FrequencySelector = () => {
+export const FrequencySelector = ({taskType}: { taskType?: TaskType }) => {
+  const frequency = taskType?.frequency ? Duration.fromISO(taskType.frequency) : undefined
+  if (frequency && !frequency.isValid) {
+    throw new Error(`Invalid frequency (${taskType?.frequency}) for task type ${taskType?.name}`);
+  }
   return (
     <>
       <Label htmlFor="frequency-selector">Repeats every...</Label>
       <div className="flex flex-row gap-4" id="frequency-selector">
         <div className="grid gap-2 w-12">
-          <Input type="number" min="0" defaultValue="0" id="frequency-months" name="frequency-months" required/>
+          <Input type="number" min="0" defaultValue={frequency?.months || 0} id="frequency-months"
+                 name="frequency-months" required/>
           <Label htmlFor="frequency-months" className="font-normal">Months</Label></div>
         <div className="grid gap-2 w-12">
-          <Input type="number" min="0" defaultValue="0" id="frequency-weeks" name="frequency-weeks" required/>
+          <Input type="number" min="0" defaultValue={frequency?.weeks || 0} id="frequency-weeks" name="frequency-weeks"
+                 required/>
           <Label htmlFor="frequency-days" className="font-normal">Weeks</Label>
         </div>
         <div className="grid gap-2 w-12">
-          <Input type="number" min="0" defaultValue="0" id="frequency-days" name="frequency-days" required/>
+          <Input type="number" min="0" defaultValue={frequency?.days || 0} id="frequency-days" name="frequency-days"
+                 required/>
           <Label htmlFor="frequency-days" className="font-normal">Days</Label>
         </div>
       </div>

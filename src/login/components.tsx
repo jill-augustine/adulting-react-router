@@ -54,7 +54,8 @@ export const LoginCard = ({error, loading, fetcher, testUserError, testUserLoadi
                   </Button>
                 </div>
               </fetcher.Form>
-              <fetcher.Form method="post">
+              {/*Don't show test-user input if deployed on vercel*/}
+              {!import.meta.env.VERCEL_URL ? <fetcher.Form method="post">
                 <div className="grid gap-2">
                   <Input id="is-test-user" type="hidden" name="is-test-user"/>
                 </div>
@@ -70,7 +71,7 @@ export const LoginCard = ({error, loading, fetcher, testUserError, testUserLoadi
                     Sign up
                   </Link>
                 </div>
-              </fetcher.Form>
+              </fetcher.Form> : null}
             </CardContent>
           </Card>
         </div>

@@ -1,8 +1,7 @@
 import {type ActionFunctionArgs, redirect} from "react-router";
 import {
   browserClient as supabase,
-  VITE_SUPABASE_TEST_USER_EMAIL as testUserEmail,
-  VITE_SUPABASE_TEST_USER_PASSWORD as testUserPassword
+  getTestUserCredentials,
 } from "@/lib/client";
 import {parseLoginForm} from "@/login/service";
 
@@ -11,8 +10,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
   let email: string
   let password: string
   if (formData.has('is-test-user')) {
-    email = testUserEmail
-    password = testUserPassword
+    ({email, password} = getTestUserCredentials())
   } else {
     const parsedFormData = parseLoginForm(formData)
     email = parsedFormData.email

@@ -1,7 +1,7 @@
 import {browserClient as supabase} from "@/lib/client";
 import {type Task, taskSelect} from "@/tasks/service";
 import {type TaskType, taskTypeSelect} from "@/task-types/service";
-import {type Tag, tagsSelect} from "@/tags/service";
+// import {type Tag, tagsSelect} from "@/tags/service";
 
 type Chore = {
   id: number;
@@ -9,7 +9,7 @@ type Chore = {
   description: string;
   tasks: Task[],
   taskTypes: TaskType[]
-  tags: Tag[]
+  // tags: Tag[]
 }
 
 const choreSelect = `
@@ -17,9 +17,10 @@ const choreSelect = `
   name,
   description,
   tasks (${taskSelect}),
-  taskTypes:task_types (${taskTypeSelect}),
-  tags (${tagsSelect})
+  taskTypes:task_types (${taskTypeSelect})
   `
+// tags (${tagsSelect})
+// `
 
 // Supabase fetch functions that return an array of objects that are then renamed `convertResponseToChores`
 // Returns ordered array of chores
