@@ -7,10 +7,13 @@ import * as process from "node:process";
 
 /// <reference types="vite/types/importMeta.d" />
 
-const VITE_SUPABASE_URL = import.meta.env?.VITE_SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
-const VITE_SUPABASE_ANON_KEY = import.meta.env?.VITE_SUPABASE_ANON_KEY ?? process.env.VITE_SUPABASE_ANON_KEY;
-export const VITE_SUPABASE_TEST_USER_EMAIL = import.meta.env?.VITE_SUPABASE_TEST_USER_EMAIL ?? process.env.VITE_SUPABASE_TEST_USER_EMAIL;
-export const VITE_SUPABASE_TEST_USER_PASSWORD = import.meta.env?.VITE_SUPABASE_TEST_USER_PASSWORD ?? process.env.VITE_SUPABASE_TEST_USER_PASSWORD;
+const viteEnv = typeof import.meta !== 'undefined' && import.meta.env
+  ? import.meta.env : undefined;
+
+const VITE_SUPABASE_URL = viteEnv?.VITE_SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
+const VITE_SUPABASE_ANON_KEY = viteEnv?.VITE_SUPABASE_ANON_KEY ?? process.env.VITE_SUPABASE_ANON_KEY;
+export const VITE_SUPABASE_TEST_USER_EMAIL = viteEnv?.VITE_SUPABASE_TEST_USER_EMAIL || process.env?.VITE_SUPABASE_TEST_USER_EMAIL || "";
+export const VITE_SUPABASE_TEST_USER_PASSWORD = viteEnv?.VITE_SUPABASE_TEST_USER_PASSWORD || process.env?.VITE_SUPABASE_TEST_USER_PASSWORD || "";
 
 export const getTestUserCredentials = () => {
   return {
