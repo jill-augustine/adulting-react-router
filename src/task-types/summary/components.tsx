@@ -1,5 +1,5 @@
-import type {TaskType} from "@/task-types/service";
-import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {type TaskType} from "@/task-types/service.ts";
+import {Card, CardAction, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button.tsx";
 import {PlusIcon} from "lucide-react";
 import * as React from "react";
