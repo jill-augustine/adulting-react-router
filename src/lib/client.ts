@@ -12,6 +12,13 @@ const VITE_SUPABASE_ANON_KEY = import.meta.env?.VITE_SUPABASE_ANON_KEY ?? proces
 export const VITE_SUPABASE_TEST_USER_EMAIL = import.meta.env?.VITE_SUPABASE_TEST_USER_EMAIL ?? process.env.VITE_SUPABASE_TEST_USER_EMAIL;
 export const VITE_SUPABASE_TEST_USER_PASSWORD = import.meta.env?.VITE_SUPABASE_TEST_USER_PASSWORD ?? process.env.VITE_SUPABASE_TEST_USER_PASSWORD;
 
+export const getTestUserCredentials = () => {
+  return {
+    email: VITE_SUPABASE_TEST_USER_EMAIL,
+    password: VITE_SUPABASE_TEST_USER_PASSWORD,
+  }
+}
+
 export function createBrowserClient() {
   return browser(
     VITE_SUPABASE_URL,

@@ -11,4 +11,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  define: {
+    'import.meta.env.VERCEL_ENV': JSON.stringify(process.env.VERCEL_ENV || ''),
+    'import.meta.env.VERCEL': JSON.stringify(process.env.VERCEL || ''),
+    'import.meta.env.VERCEL_URL': JSON.stringify(process.env.VERCEL_URL || '')
+  }
 })
