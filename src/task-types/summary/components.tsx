@@ -54,9 +54,8 @@ export const TaskTypeSummaryCardList = ({taskTypes}: { taskTypes: TaskType[] }) 
   )
 }
 
-const BasicTaskTypeSummaryTableRow = ({taskType, location}: {
+const BasicTaskTypeSummaryTableRow = ({taskType}: {
   taskType: TaskType,
-  location: ReturnType<typeof useLocation>
 }) => {
   const frequency = Duration.fromISO(taskType.frequency).removeZeros()
   return (
@@ -73,7 +72,6 @@ const BasicTaskTypeSummaryTableRow = ({taskType, location}: {
 }
 
 export const BasicTaskTypeSummaryTable = ({taskTypes}: { taskTypes: TaskType[] }) => {
-  const location = useLocation();
   return (
     <Table>
       <TableHeader>
@@ -86,7 +84,7 @@ export const BasicTaskTypeSummaryTable = ({taskTypes}: { taskTypes: TaskType[] }
       </TableHeader>
       <TableBody>
         {taskTypes.map((taskType) => {
-          return <BasicTaskTypeSummaryTableRow key={taskType.id} taskType={taskType} location={location}/>
+          return <BasicTaskTypeSummaryTableRow key={taskType.id} taskType={taskType}/>
         })}
       </TableBody>
     </Table>

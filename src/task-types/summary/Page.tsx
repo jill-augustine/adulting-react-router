@@ -1,12 +1,6 @@
 import {useLoaderData} from "react-router";
-import {
-  PageHeader,
-  BasicTaskTypeSummaryTable,
-  TaskTypeSummaryDataTable,
-  TaskTypeSummaryCardList
-} from "@/task-types/summary/components"
+import {TaskTypeSummaryCardList} from "@/task-types/summary/components"
 import * as React from "react";
-import {Card} from "@/components/ui/card.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {PlusIcon} from "lucide-react";
 import type {TaskType} from "@/task-types/service.ts";
