@@ -1,4 +1,4 @@
-import {data, useFetcher, useLoaderData} from 'react-router'
+import {useFetcher, useLoaderData} from 'react-router'
 import {UpdateSettingsCard} from "@/settings/components";
 import {action} from "@/settings/action";
 import type {SettingsLoaderData} from "@/settings/loader";

@@ -1,5 +1,5 @@
 import {browserClient as supabase} from '@/lib/client.ts'
-import {type ActionFunctionArgs, data, redirect} from 'react-router'
+import {type ActionFunctionArgs, redirect} from 'react-router'
 import {parseSettingsForm} from "@/settings/service.ts";
 import type {UserAttributes} from "@supabase/supabase-js";
 

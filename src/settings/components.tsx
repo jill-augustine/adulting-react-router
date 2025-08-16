@@ -6,10 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {Input} from '@/components/ui/input'
-import {Label} from '@/components/ui/label'
-import {useFetcher, useLoaderData} from 'react-router'
-import {type SettingsLoaderData} from "@/settings/loader";
+import {useFetcher} from 'react-router'
 import {DisplayNameInput, PasswordInput, RepeatPasswordInput} from "@/sign-up/components";
 
 type UpdatePasswordProps = {
