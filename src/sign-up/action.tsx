@@ -12,7 +12,10 @@ export const action = async ({request}: ActionFunctionArgs) => {
     email: parsedFormData.email,
     password: parsedFormData.password,
     options: {
-      emailRedirectTo: `${origin}/protected`,
+      emailRedirectTo: `${origin}/home`,
+      data: {
+        displayName: parsedFormData.displayName
+      }
     },
   })
 

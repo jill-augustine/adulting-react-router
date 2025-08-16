@@ -2,7 +2,7 @@
 import {Outlet, useLoaderData} from "react-router";
 import {loader} from "@/layouts/protected/loader";
 
-export const Page = () => {
+export const UnprotectedLayout = () => {
   const data = useLoaderData<typeof loader>()
   return (
     <>

@@ -16,7 +16,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb.tsx";
-import {Page} from "@/layouts/unprotected/Page.tsx";
+import {UnprotectedLayout} from "@/layouts/unprotected/Page.tsx";
 
 const unprotectedRoutes: RouteObject[] = [
   forgotPasswordRoute,
@@ -27,6 +27,6 @@ const unprotectedRoutes: RouteObject[] = [
 
 export const unprotectedLayoutRoute: RouteObject = {
   // path: "/",
-  Component: Page,
+  Component: UnprotectedLayout,
   children: unprotectedRoutes,
 }
