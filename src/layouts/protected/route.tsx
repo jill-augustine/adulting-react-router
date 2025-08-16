@@ -1,7 +1,7 @@
 // Required user to be signed in
 import {type RouteObject} from "react-router";
 import logoutRoute from "@/logout/route.tsx";
-import updatePasswordRoute from "@/update-password/route.tsx";
+import settingsRoute from "@/settings/route.tsx";
 import choresRoute from "@/chores/route.tsx";
 import taskTypesRoute from "@/task-types/route.tsx";
 import boopSizesRoute from "@/boop-sizes/route.tsx";
@@ -12,7 +12,7 @@ import {loader} from "@/layouts/protected/loader";
 
 const protectedRoutes: RouteObject[] = [
   logoutRoute,
-  updatePasswordRoute,
+  settingsRoute,
   homeRoute,
   choresRoute,
   taskTypesRoute,
