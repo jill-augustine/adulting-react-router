@@ -1,6 +1,6 @@
 import {SidebarTrigger} from "@/components/ui/sidebar.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
-import {LogOut as LogOutIcon} from "lucide-react"
+import {LogOutIcon, SettingsIcon} from "lucide-react"
 import {Button} from "@/components/ui/button.tsx";
 import type {User} from "@supabase/supabase-js";
 import * as React from "react"
@@ -35,15 +35,13 @@ const Logout = ({className}: { className: string }) => {
 }
 
 const WelcomeCard = ({data}: { data: { user: User } }) => {
+  const name = data.user?.user_metadata?.displayName || data.user.email
   return (
-    // <div className="flex items-center justify-center h-screen gap-2">
-    //   <Card>
-    //     <CardContent>
-    <div>
-      Hello <span className="text-primary font-semibold">{data.user.email}</span>
+    <div className="flex justify-end gap-2">
+      Hello<span className="text-primary font-semibold">{name ? ` ${name}` : ""}</span>
+      <a href="/settings">
+        <span className="sr-only">Go to settings</span>
+        <SettingsIcon strokeWidth="1" aria-hidden="true"/></a>
     </div>
-    //     </CardContent>
-    //   </Card>
-    // </div>
   )
 }

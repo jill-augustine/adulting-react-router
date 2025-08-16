@@ -65,13 +65,13 @@ export const LoginCard = ({error, loading, fetcher, testUserError, testUserLoadi
                     {loading ? 'Logging in as test user...' : 'Login as Test User'}
                   </Button>
                 </div>
-                <div className="mt-4 text-center text-sm">
-                  Don&apos;t have an account?{' '}
-                  <Link to="/sign-up" className="underline underline-offset-4">
-                    Sign up
-                  </Link>
-                </div>
               </fetcher.Form> : null}
+              <div className="mt-4 text-center text-sm">
+                Don&apos;t have an account?{' '}
+                <Link to="/sign-up" className="underline underline-offset-4">
+                  Sign up
+                </Link>
+              </div>
             </CardContent>
           </Card>
         </div>
