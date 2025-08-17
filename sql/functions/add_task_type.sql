@@ -13,7 +13,7 @@ begin
     returning id into task_type_id;
 
     if array_length(tag_ids, 1) > 0 then
-        insert into join_task_types_tags(task_type_id, tag_id)
+        insert into tags_task_types_join(task_type_id, tag_id)
         select task_type_id, tag_id
         from unnest(tag_ids) as tag_id;
     end if;
