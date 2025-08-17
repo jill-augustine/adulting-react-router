@@ -19,12 +19,12 @@ begin
 
     -- Delete existing tag associations
     delete
-    from join_task_types_tags
-    where join_task_types_tags.task_type_id = update_task_type.id;
+    from tags_task_types_join
+    where tags_task_types_join.task_type_id = update_task_type.id;
 
     -- Insert new tag associations if provided
     if array_length(tag_ids, 1) > 0 then
-        insert into join_task_types_tags(task_type_id, tag_id)
+        insert into tags_task_types_join(task_type_id, tag_id)
         select id, tag_id
         from unnest(tag_ids) as tag_id;
     end if;
