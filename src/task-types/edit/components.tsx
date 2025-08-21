@@ -67,19 +67,6 @@ export const EditTaskTypeCard = ({taskType, boopSizes, fetcher, loading, error}:
                 <div className="grid gap-2">
                   <FrequencySelector taskType={taskType}/>
                 </div>
-                {/*TODO: Change this to a different type of input, e.g. drop-down or something else.*/}
-                {/*<div className="grid gap-2">*/}
-                {/*  <Label htmlFor="tag-ids">Tags</Label>*/}
-                {/*  <Input*/}
-                {/*    id="tag-ids"*/}
-                {/*    type="text"*/}
-                {/*    name="tag-ids"*/}
-                {/*    defaultValue={taskType.tags.map((tag) => {*/}
-                {/*      return tag.name*/}
-                {/*    }).join(",")}*/}
-                {/*  />*/}
-                {/*  {error && <p className="text-sm text-red-500">{error}</p>}*/}
-                {/*</div>*/}
               </div>
             </div>
           </CardContent>

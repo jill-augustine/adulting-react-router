@@ -12,7 +12,7 @@ export const Page = () => {
       <div className="flex flex-row justify-start w-full">
         <Button variant="outline" size="sm" asChild className="items-center justify-end">
           <a href="/task-types">
-            <span><ChevronLeftIcon/></span> Back
+            <span><ChevronLeftIcon/></span>Back
           </a>
         </Button>
       </div>

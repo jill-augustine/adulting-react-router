@@ -1,10 +1,10 @@
 create or replace function update_task_type(
-    id int8,
+    id uuid,
     name text,
-    boop_size_id int8,
+    boop_size_id uuid,
     frequency text,
-    tag_ids int8[]
-) returns int8
+    tag_ids uuid[]
+) returns uuid
     language 'plpgsql'
     set search_path = pg_catalog, public
 as

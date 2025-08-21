@@ -1,11 +1,11 @@
-create or replace function add_task_type(name text, boop_size_id int8, frequency text, tag_ids int8[])
-    returns int8
+create or replace function add_task_type(name text, boop_size_id uuid, frequency text, tag_ids uuid[])
+    returns uuid
     language 'plpgsql'
     set search_path = pg_catalog, public
 as
 $$
 declare
-    task_type_id int8;
+    task_type_id uuid;
 begin
     -- Start of transaction
     insert into task_types(name, boop_size_id, frequency)

@@ -5,14 +5,15 @@ import {
   CardHeader, CardTitle
 } from "@/components/ui/card";
 import {Button} from "@/components/ui/button.tsx";
-import {PencilIcon, Repeat2Icon} from "lucide-react";
+import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {Car, PencilIcon, Repeat2Icon} from "lucide-react";
 import * as React from "react";
 import {useLocation} from "react-router";
 import {Duration} from "luxon";
 import {formatFrequency} from "@/task-types/components";
+import {EditTaskTypeCard} from "@/task-types/edit/components.tsx";
 
 export const TaskTypeDetailsCard = ({taskType}: { taskType: TaskType }) => {
-  const frequency = Duration.fromISO(taskType.frequency).removeZeros()
   return (
     <Card key={taskType.id}>
       <CardHeader>
@@ -30,13 +31,15 @@ export const TaskTypeDetailsCard = ({taskType}: { taskType: TaskType }) => {
         </CardDescription>
       </CardContent>
       <CardFooter>
-        <EditButton/>
+        {/*<EditButton/>*/}
+        <EditDialog taskType={taskType}/>
       </CardFooter>
     </Card>
   )
 }
 
-const EditButton = () => {
+// TODO: Move this to general place
+export const EditButton = () => {
   const location = useLocation()
   return (
     <a href={`${location.pathname}/edit`}>
@@ -47,6 +50,25 @@ const EditButton = () => {
   )
 }
 
+const EditDialog = ({taskType}: { taskType: TaskType }) => {
+  return (
+    <Dialog defaultOpen={false}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" className="">
+          <PencilIcon/>Edit
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md bg-white">
+        Some content
+        <Card>
+          <CardContent>
+            Some other content
+          </CardContent>
+        </Card>
+      </DialogContent>
+    </Dialog>
+  )
+}
 export const PageHeader = () => {
   // const location = useLocation()
   return null

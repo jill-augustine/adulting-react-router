@@ -59,16 +59,16 @@ export const CreateTaskTypeCard = ({boopSizes, fetcher, loading, error}: TaskTyp
               <div className="grid gap-2">
                 <FrequencySelector/>
               </div>
-              {/*<div className="grid gap-2">*/}
-              {/*  <Label htmlFor="tag-ids">Tags</Label>*/}
-              {/*  <Input*/}
-              {/*    id="tag-ids"*/}
-              {/*    type="text"*/}
-              {/*    name="tag-ids"*/}
-              {/*    placeholder="TODO: Make into multi-select with search?"*/}
-              {/*  />*/}
-              {/*  {error && <p className="text-sm text-red-500">{error}</p>}*/}
-              {/*</div>*/}
+              <div className="grid gap-2">
+                {/*  <Label htmlFor="tag-ids">Tags</Label>*/}
+                {/*  <Input*/}
+                {/*    id="tag-ids"*/}
+                {/*    type="text"*/}
+                {/*    name="tag-ids"*/}
+                {/*    placeholder="TODO: Make into multi-select with search?"*/}
+                {/*  />*/}
+                {error && <p className="text-sm text-red-500">{error}</p>}
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2">

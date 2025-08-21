@@ -1,10 +1,11 @@
+import * as z from 'zod';
 import {browserClient as supabase} from "@/lib/client";
 import {type Task, taskSelect} from "@/tasks/service";
 import {type TaskType, taskTypeSelect} from "@/task-types/service";
 // import {type Tag, tagsSelect} from "@/tags/service";
 
-type Chore = {
-  id: number;
+export type Chore = {
+  id: string;
   name: string;
   description: string;
   tasks: Task[],
@@ -22,10 +23,8 @@ const choreSelect = `
 // tags (${tagsSelect})
 // `
 
-// Supabase fetch functions that return an array of objects that are then renamed `convertResponseToChores`
-// Returns ordered array of chores
 
-const getAllChores = async (): Promise<Chore[]> => {
+export const getAllChores = async (): Promise<Chore[]> => {
   const {data, error} = await supabase
     .from('chores')
     .select(choreSelect)
@@ -34,7 +33,7 @@ const getAllChores = async (): Promise<Chore[]> => {
   return data.sort((a, b) => a.id - b.id);
 }
 
-const getChore = async (choreId: number): Promise<Chore> => {
+export const getChore = async (choreId: string): Promise<Chore> => {
   const {data, error} = await supabase
     .from('chores')
     .select(choreSelect)
@@ -46,18 +45,36 @@ const getChore = async (choreId: number): Promise<Chore> => {
   return data[0]
 }
 
+const createChoreFormSchema = z.object({
+  choreName: z.string(),
+  choreDescription: z.string().optional(),
+})
+
 // Add chore with no associated tasks
-const addChore = async (chore: { name: string, description: string }): Promise<Chore> => {
+export const parseCreateChoreForm = (formData: FormData) => {
+  const {data: parsedFormData, error} = createChoreFormSchema.safeParse({
+    choreName: formData.get('chore-name'),
+    choreDescription: formData.get('chore-description'),
+  })
+  if (error) {
+    console.error("parseCreateChoreForm:", error)
+    throw error
+  }
+  return parsedFormData
+}
+
+export const addChore = async (chore: { name: string, description?: string }): Promise<string> => {
   const {data, error} = await supabase
     .from('chores')
     .insert([chore])
-    .select(choreSelect)
-    .overrideTypes<Chore[], { merge: false }>()
+    .select('id')
+    .single()
+    .overrideTypes<{ id: string }, { merge: false }>()
   if (error) throw error;
-  return data[0]
+  return data.id
 }
 
-const updateChore = async (chore: Omit<Chore, "tasks">): Promise<Chore> => {
+export const updateChore = async (chore: Omit<Chore, "tasks">): Promise<Chore> => {
   const {data, error} = await supabase
     .from('chores')
     .upsert(chore)
@@ -77,14 +94,4 @@ const deleteChore = async (choreId: number): Promise<Chore> => {
     .overrideTypes<Chore[], { merge: false }>()
   if (error) throw error;
   return data[0]
-}
-
-
-export {
-  type Chore,
-  addChore,
-  getAllChores,
-  getChore,
-  updateChore,
-  deleteChore,
 }

@@ -100,7 +100,7 @@ const parseCreateTaskTypeForm = (formData: FormData) => {
   });
 
   if (error) {
-    console.error("parseCreateTaskTypeForm", error)
+    console.error("parseCreateTaskTypeForm:", error)
     throw error;
   }
   return {
@@ -145,14 +145,14 @@ const createTaskType = async (
   frequency: string,
   tagIds: string[] = []
 ): Promise<number> => {
-  const taskData = {name, boop_size_id: parseInt(boopSizeId), frequency, tag_ids: tagIds.map(parseInt)}
+  const taskData = {name, boop_size_id: boopSizeId, frequency, tag_ids: tagIds}
   console.log(taskData);
   const {data: taskTypeId, error} = await supabase
     .rpc('add_task_type', taskData)
     .single()
     .overrideTypes<number, { merge: false }>()
   if (error) {
-    console.error("Error creating task type");
+    console.error(`Error creating task type: ${error.message}`);
     throw error;
   }
   if (!taskTypeId) {
@@ -169,11 +169,11 @@ const updateTaskType = async (
   frequency: string,
   tagIds: string[] = []): Promise<number> => {
   const taskData = {
-    id: parseInt(id),
+    id,
     name,
-    boop_size_id: parseInt(boopSizeId),
+    boop_size_id: boopSizeId,
     frequency,
-    tag_ids: tagIds.map(parseInt)
+    tag_ids: tagIds,
   }
   console.log(taskData);
   const {data: taskTypeId, error} = await supabase
