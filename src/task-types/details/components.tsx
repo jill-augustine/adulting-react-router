@@ -36,7 +36,7 @@ export const TaskTypeDetailsCard = ({taskType}: { taskType: TaskType }) => {
   )
 }
 
-const EditButton = () => {
+export const EditButton = () => {
   const location = useLocation()
   return (
     <a href={`${location.pathname}/edit`}>

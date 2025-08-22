@@ -16,8 +16,9 @@ export {
 };
 
 type TaskType = {
-  id: number;
-  boopSize: BoopSize
+  id: string;
+  // boopSize: BoopSize
+  choreId: string;
   name: string;
   frequency: string;
   // tags: Tag[];
