@@ -20,9 +20,10 @@ const taskSelect = `
   startDate:start_date,
   dueDate:due_date,
   dateCompleted:date_completed,
-  completedBy:completed_by,
-  taskType:task_types(${taskTypeSelect})
-  ` // not task_type_id
+  completedBy:completed_by
+  `
+// taskType:task_types(${taskTypeSelect})
+// not task_type_id
 
 // Functions to return tasks
 const getTask = async (taskId: number): Promise<Task> => {

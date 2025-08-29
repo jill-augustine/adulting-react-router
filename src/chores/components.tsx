@@ -1,13 +1,33 @@
 import type {Chore} from "@/chores/service.ts";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card.tsx";
 import {Label} from "@/components/ui/label.tsx";
 import {Input} from "@/components/ui/input.tsx";
-import {BoopSizeSelectorRadio as BoopSizeSelector} from "@/boop-sizes/summary/components.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import * as React from "react";
-import {FrequencySelector} from "@/task-types/create/components.tsx";
-import type {useFetcher} from "react-router";
-import {EditableTableWithAddFooter} from "@/task-types/components.tsx";
+import {type useFetcher, useLocation} from "react-router";
+import {type TaskTypeFormRow, EditableTableWithAddFooter, NonEditableTable} from "@/task-types/components.tsx";
+import {useState} from "react";
+import {CheckSquareIcon, ChevronLeftIcon, PencilIcon, SquareIcon} from "lucide-react";
+import {Duration} from "luxon";
+
+export const EditButton = () => {
+  const location = useLocation()
+  return (
+    <a href={`${location.pathname}/edit`}>
+      <Button variant="outline" size="sm" className="">
+        <PencilIcon/>Edit
+      </Button>
+    </a>
+  )
+}
 
 type GenericChoreCardProps = {
   fetcher: ReturnType<typeof useFetcher>;
@@ -15,7 +35,15 @@ type GenericChoreCardProps = {
   error?: string;
   chore?: Chore;
 }
-const GenericChoreCard = ({fetcher, loading, chore}: GenericChoreCardProps) => {
+const GenericChoreInputCard = ({fetcher, loading, chore, error}: GenericChoreCardProps) => {
+  const location = useLocation();
+  const [taskTypeFormData, setTaskTypeFormData] = useState<TaskTypeFormRow[]>(chore?.taskTypes ?
+    chore.taskTypes.map((taskType) => (
+      {
+        name: taskType.name,
+        frequency: Duration.fromISO(taskType.frequency).days
+      })) :
+    []);
   return (
     <div className="flex flex-col gap-y-2 md:gap-y-4 items-center">
       <Card className="w-full max-w-sm">
@@ -24,38 +52,101 @@ const GenericChoreCard = ({fetcher, loading, chore}: GenericChoreCardProps) => {
             <CardTitle>{chore ? "Edit chore details" : "Create a new chore"}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
+            <div className="flex flex-col gap-3 md:gap-6">
+              <div className="grid gap-1 md:gap-2">
                 <Label htmlFor="chore-name">Name</Label>
                 {chore ?
                   <Input id="chore-name" name="chore-name" type="text" defaultValue={chore.name}/> :
                   <Input id="chore-name" name="chore-name" type="text" placeholder="e.g. take out trash" required/>}
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="chore-description">Name</Label>
+              <div className="grid gap-1 md:gap-2">
+                <Label htmlFor="chore-description">Description</Label>
                 <Input id="chore-description" name="chore-description" type="text"
                        defaultValue={chore?.description ?? ""}/>
               </div>
-              {/*Task types data table below with columns "name and frequency" only*/}
-              <EditableTableWithAddFooter taskTypes={chore?.taskTypes || []} choreId={chore?.id}/>
+              <CardTitle className="grid gap-1 md:gap-2">Task Types</CardTitle>
+              <EditableTableWithAddFooter taskTypeFormData={taskTypeFormData}
+                                          setTaskTypeFormData={setTaskTypeFormData} choreId={chore?.id}/>
+              <Input type="hidden" name="task-types" value={JSON.stringify(taskTypeFormData)}/>
+              {error ? <p className="text-sm text-red-500">{error}</p> : null}
             </div>
           </CardContent>
-          <CardFooter className="flex-col gap-2">
-            <Button type="submit" className="w-full" variant="outline" disabled={loading}>
-              {loading ? "Creating..." : "Create"}
-            </Button>
+          <CardFooter className="flex flex-row gap-1 md:gap-2 justify-between">
+            {
+              chore ?
+                <Button variant="outline" asChild className="w-1/3 bg-gray-200">
+                  <a href={location.pathname.replace(/\/edit$/, "")}>
+                    Cancel
+                  </a>
+                </Button> : <Button/>
+            }
+            {
+              chore ?
+                <Button type="submit" className="w-1/3" variant="outline" disabled={loading}>
+                  {loading ? "Saving..." : "Save"}
+                </Button> :
+                <Button type="submit" className="w-1/3" variant="outline" disabled={loading}>
+                  {loading ? "Creating..." : "Create"}
+                </Button>}
           </CardFooter>
         </fetcher.Form>
       </Card>
-      <h1 className="text-3xl">Add a "add to chore" button on the task type details page</h1>
     </div>
   )
 }
 
 export const CreateChoreCard = ({fetcher, loading, error}: GenericChoreCardProps) => {
-  return <GenericChoreCard fetcher={fetcher} loading={loading} error={error}/>
+  return <GenericChoreInputCard fetcher={fetcher} loading={loading} error={error}/>
 }
 
 export const EditChoreCard = ({chore, fetcher, loading, error}: GenericChoreCardProps) => {
-  return <GenericChoreCard chore={chore} fetcher={fetcher} loading={loading} error={error}/>
+  return <GenericChoreInputCard chore={chore} fetcher={fetcher} loading={loading} error={error}/>
+}
+
+export const GenericChoreDetailCard = ({chore}: { chore: Chore }) => {
+  const openTasks = chore.tasks.filter((t) => t.completedBy === null)
+  const completeTasks = chore.tasks.filter((t) => t.completedBy !== null)
+  const taskTypeData = chore?.taskTypes ? chore.taskTypes.map((taskType) => (
+    {
+      name: taskType.name,
+      frequency: taskType.frequency,
+    })) : null
+
+  return (
+    <div className="flex flex-col gap-y-2 md:gap-y-4 items-center">
+      <Card key={chore.id} className="w-full max-w-sm">
+        <CardHeader>
+          <CardAction className="grid grid-cols-2 gap-x-1 gap-y-0.5">
+            <SquareIcon/>{`${openTasks.length}`}
+            <CheckSquareIcon/> {`${completeTasks.length - openTasks.length}`}
+          </CardAction>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-3 md:gap-6">
+            <CardTitle>{chore.name}</CardTitle>
+            <CardDescription className="flex flex-col gap-3">
+              <div>{chore.description}</div>
+              {taskTypeData ? <CardTitle>Task Types</CardTitle> : null}
+              {taskTypeData ? <NonEditableTable taskTypeData={taskTypeData}/> : null}
+            </CardDescription>
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-row gap-1 md:gap-2 justify-end-safe">
+          <EditButton/>
+        </CardFooter>
+      </Card>
+    </div>
+  )
+}
+
+export const ChoreDetailsHeader = () => {
+  return (
+    <div className="flex flex-row justify-start w-full">
+      <Button variant="outline" size="sm" asChild className="items-center justify-end">
+        <a href="/chores">
+          <span><ChevronLeftIcon/></span>Back to all Chores
+        </a>
+      </Button>
+    </div>
+  )
 }

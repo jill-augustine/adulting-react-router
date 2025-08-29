@@ -8,11 +8,10 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card.tsx";
-import {EditButton} from "@/task-types/details/components";
-import {CheckSquareIcon, PlusIcon, SeparatorHorizontalIcon, SquareIcon} from "lucide-react";
+import {EditButton} from "@/chores/components";
+import {CheckSquareIcon, PlusIcon, SquareIcon} from "lucide-react";
 import * as React from "react";
 import {Separator} from "@/components/ui/separator.tsx";
-import {TaskTypeSummaryCardList} from "@/task-types/summary/components.tsx";
 import {Button} from "@/components/ui/button.tsx";
 
 const ChoreDetailsCard = ({chore}: { chore: Chore }) => {
@@ -34,7 +33,7 @@ const ChoreDetailsCard = ({chore}: { chore: Chore }) => {
           <Separator className="bg-cyan-600 my-3"/>
           {/*Default gap and padding of Card is 6*/}
           <CardTitle>Task Types</CardTitle>
-          <TaskTypeSummaryCardList taskTypes={chore.taskTypes}/>
+          {/*<TaskTypeSummaryCardList taskTypes={chore.taskTypes}/>*/}
           <Button variant="outline" size="sm" className="w-min">
             <PlusIcon/>Add
           </Button>

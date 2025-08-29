@@ -14,6 +14,7 @@ CREATE TABLE public.chores
     description text,
     id          UUID PRIMARY KEY DEFAULT (gen_random_uuid()) NOT NULL,
     user_id     UUID             DEFAULT (auth.uid()) REFERENCES auth.users (id) ON DELETE CASCADE,
+    task_types  JSONB,
     is_hidden   boolean          DEFAULT false
 );
 ALTER TABLE chores

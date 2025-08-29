@@ -1,6 +1,5 @@
 import {useFetcher} from "react-router";
 import {action} from "@/chores/create/action"
-// import {CreateChoreCard} from "@/chores/create/components.tsx";
 import {CreateChoreCard} from "@/chores/components"
 
 export const Page = () => {

@@ -1,6 +1,6 @@
 import {redirect,} from "react-router";
 import type {ActionFunctionArgs,} from "react-router-dom"
-import {parseCreateChoreForm, addChore} from "@/chores/service";
+import {parseChoreForm, addChore} from "@/chores/service";
 
 
 export const action = async ({
@@ -8,7 +8,7 @@ export const action = async ({
                              }: ActionFunctionArgs): Promise<Response | { error: string }> => {
   try {
     const formData = await request.formData()
-    const parsedFormData = parseCreateChoreForm(formData);
+    const parsedFormData = parseChoreForm(formData);
     const choreId = await addChore({
         name: parsedFormData.choreName,
         description: parsedFormData?.choreDescription,

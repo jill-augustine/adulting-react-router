@@ -11,34 +11,18 @@ export const navData = {
     {
       title: "Home",
       url: "/home",
-      items: [
-        // {
-        //   title: "Installation",
-        //   url: "#",
-        //   isActive: true,
-        // },
-      ],
     },
     {
       title: "Chores",
       url: "/chores",
     },
     {
-      title: "Task Types",
-      url: "/task-types",
-    },
-    // Some separator
-    // {
-    //   title: "Tags",
-    //   url: "/tags",
-    // },
-    {
       title: "Tasks",
       url: "/tasks",
     },
     {
-      title: "Boop Sizes",
-      url: "/boop-sizes",
+      title: "Settings",
+      url: "/settings",
     }
   ],
 }
