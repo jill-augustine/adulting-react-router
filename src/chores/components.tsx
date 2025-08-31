@@ -48,6 +48,9 @@ const GenericChoreInputCard = ({fetcher, loading, chore, error}: GenericChoreCar
     <div className="flex flex-col gap-y-2 md:gap-y-4 items-center">
       <Card className="w-full min-w-sm max-w-sm">
         <fetcher.Form method="post" className="flex flex-col gap-4">
+          {
+            chore ?
+              <Input type="hidden" name="chore-id" value={chore.id}/> : null}
           <CardHeader>
             <CardTitle>{chore ? "Edit chore details" : "Create a new chore"}</CardTitle>
           </CardHeader>
