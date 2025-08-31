@@ -1,7 +1,7 @@
 import {
   browserClient as supabase,
 } from "@/lib/client";
-import {type TaskType, taskTypeSelect} from "@/task-types/service";
+import {type TaskType} from "@/task-types/service";
 import {DateTime} from "luxon"
 
 type Task = {
@@ -20,9 +20,10 @@ const taskSelect = `
   startDate:start_date,
   dueDate:due_date,
   dateCompleted:date_completed,
-  completedBy:completed_by,
-  taskType:task_types(${taskTypeSelect})
-  ` // not task_type_id
+  completedBy:completed_by
+  `
+// taskType:task_types(${taskTypeSelect})
+// not task_type_id
 
 // Functions to return tasks
 const getTask = async (taskId: number): Promise<Task> => {
@@ -94,7 +95,7 @@ const completeTask = async (taskId: number): Promise<Task[]> => {
     .from("tasks")
     .select(taskSelect)
     .is("chore_id", task.choreId)
-    .lte("task_types.boop_sizes.value", task.taskType.boopSize.value)
+    // .lte("task_types.boop_sizes.value", task.taskType.boopSize.value)
     .is("date_completed", null)
     .overrideTypes<Task[], { merge: false }>()
   if (eligibleTasksResult.error) throw eligibleTasksResult.error

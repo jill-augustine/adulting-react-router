@@ -1,6 +1,6 @@
 import {redirect,} from "react-router";
 import type {ActionFunctionArgs,} from "react-router-dom"
-import {parseCreateTaskTypeForm, createTaskType,} from "@/task-types/service";
+import {parseCreateChoreForm, addChore} from "@/chores/service";
 
 
 export const action = async ({
@@ -8,14 +8,13 @@ export const action = async ({
                              }: ActionFunctionArgs): Promise<Response | { error: string }> => {
   try {
     const formData = await request.formData()
-    const parsedFormData = parseCreateTaskTypeForm(formData);
-    const taskTypeId = await createTaskType(
-      parsedFormData.name,
-      parsedFormData.boopSizeId,
-      parsedFormData.frequency,
-      // parsedFormData.tagIds,
+    const parsedFormData = parseCreateChoreForm(formData);
+    const choreId = await addChore({
+        name: parsedFormData.name,
+        description: parsedFormData?.description || "",
+      }
     );
-    return redirect(`/task-types/${taskTypeId}`);
+    return redirect(`/chores/${choreId}`);
   } catch (error) {
     if (error instanceof Error) {
       return {error: error.message};
