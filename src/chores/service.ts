@@ -56,12 +56,11 @@ const createChoreFormSchema = z.object({
         })
         return z.NEVER
       }
-      array.map((val) => {
-        return {
+      return array.map((val) => ({
           name: val.name,
           frequency: `P${val.frequency}D`
         }
-      })
+      ))
     }),
 })
 
