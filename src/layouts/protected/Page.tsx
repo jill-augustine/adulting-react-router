@@ -11,34 +11,18 @@ export const navData = {
     {
       title: "Home",
       url: "/home",
-      items: [
-        // {
-        //   title: "Installation",
-        //   url: "#",
-        //   isActive: true,
-        // },
-      ],
     },
     {
       title: "Chores",
       url: "/chores",
     },
     {
-      title: "Task Types",
-      url: "/task-types",
-    },
-    // Some separator
-    // {
-    //   title: "Tags",
-    //   url: "/tags",
-    // },
-    {
       title: "Tasks",
       url: "/tasks",
     },
     {
-      title: "Boop Sizes",
-      url: "/boop-sizes",
+      title: "Settings",
+      url: "/settings",
     }
   ],
 }
@@ -50,11 +34,9 @@ export const Page = () => {
       <SidebarInset>
         {/*Header of that page spanning whole width*/}
         <SiteHeaderWithContent data={data}/>
-        <div className="flex flex-col w-full items-center justify-center p-2 md:p-4">
+        <div className="flex flex-col w-full items-center justify-center p-2 md:p-4 min-w-sm max-w-xl">
           {/*Content of that page limited to width small->large*/}
-          <div className="min-w-sm max-w-xl">
-            <Outlet/>
-          </div>
+          <Outlet/>
         </div>
       </SidebarInset>
     </SidebarProvider>
